@@ -1,0 +1,24 @@
+[
+  {
+    "Name": "Nuevo perfil",
+    "Projects": [
+      {
+        "Path": "MSAuthServ\\MSAuthServ.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "MSQuotes\\MSQuotes.csproj",
+        "Action": "Start",
+        "DebugTarget": "IIS Express (Google Chrome)"
+      },
+      {
+        "Path": "MSPerson\\MSPerson.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "MSRecipes\\MSRecipes.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

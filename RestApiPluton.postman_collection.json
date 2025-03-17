@@ -1,0 +1,438 @@
+{
+	"info": {
+		"_postman_id": "3b52a2c6-fa80-46f5-ac82-9fc3172a6047",
+		"name": "RestApiPluton",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43019371"
+	},
+	"item": [
+		{
+			"name": "People",
+			"item": [
+				{
+					"name": "PeopleGetId",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImFkbWluIiwibmFtZWlkIjoiMSIsIm5iZiI6MTc0MjIxOTkwOSwiZXhwIjoxNzQyMjIwMjA5LCJpYXQiOjE3NDIyMTk5MDksImlzcyI6InRlc3QtaXNzdWVyIiwiYXVkIjoidGVzdC1hdWRpZW5jZSJ9.ymBkO4hd_1jY-HKQDo4HVnv11Bt4gsx9Tr3hXRTPzOE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:44382/api/people/2",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44382",
+							"path": [
+								"api",
+								"people",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PeopleGetAll",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImFkbWluIiwibmFtZWlkIjoiMSIsIm5iZiI6MTc0MjIxOTkwOSwiZXhwIjoxNzQyMjIwMjA5LCJpYXQiOjE3NDIyMTk5MDksImlzcyI6InRlc3QtaXNzdWVyIiwiYXVkIjoidGVzdC1hdWRpZW5jZSJ9.ymBkO4hd_1jY-HKQDo4HVnv11Bt4gsx9Tr3hXRTPzOE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:44382/api/people",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44382",
+							"path": [
+								"api",
+								"people"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PeopleCreated",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImFkbWluIiwibmFtZWlkIjoiMSIsIm5iZiI6MTc0MTg4MTIzOSwiZXhwIjoxNzQxODgzMDM5LCJpYXQiOjE3NDE4ODEyMzksImlzcyI6InRlc3QtaXNzdWVyIiwiYXVkIjoidGVzdC1hdWRpZW5jZSJ9.llnEV4ELmyz9iWw9XAxgJChzQDrCJcT65uvaj1r-PWQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Serena Williams\",\r\n    \"documentType\": \"PR\",\r\n    \"documentNumber\": \"45896325\",\r\n    \"dateOfBirth\": \"1981-09-26T00:00:00\",\r\n    \"phoneNumber\": \"555-987654\",\r\n    \"email\": \"serena.williams@example.com\",\r\n    \"personType\": \"Patient\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:44382/api/people",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44382",
+							"path": [
+								"api",
+								"people"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PeopleDelete",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:44382/api/people/14",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44382",
+							"path": [
+								"api",
+								"people",
+								"14"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PeopleUpdateData",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"dateOfBirth\": \"1985-05-10T00:00:00\",\r\n    \"phoneNumber\": \"555-1455\",\r\n    \"email\": \"example@example.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:44382/api/people/12",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44382",
+							"path": [
+								"api",
+								"people",
+								"12"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Quotes",
+			"item": [
+				{
+					"name": "QuotesGetAll",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImFkbWluIiwibmFtZWlkIjoiMSIsIm5iZiI6MTc0MjIyMDE3NSwiZXhwIjoxNzQyMjIwNDc1LCJpYXQiOjE3NDIyMjAxNzUsImlzcyI6InRlc3QtaXNzdWVyIiwiYXVkIjoidGVzdC1hdWRpZW5jZSJ9.iI77TOTjHnRezcWz-npv6aU_-5ijfelho2JlKjPIcas",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:44316/api/quotes",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44316",
+							"path": [
+								"api",
+								"quotes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "QuotesCreated",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Date\": \"2025-03-10T00:00:00\",\r\n    \"Location\": \"Clinic R\",\r\n    \"PatientId\": 2,\r\n    \"DoctorId\": 1,\r\n    \"Status\": \"In Progress\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:44316/api/quotes",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44316",
+							"path": [
+								"api",
+								"quotes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "QuotesUpdateStatusQuote",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Code\": \"RX10012\",\r\n    \"Status\": \"Completed\",\r\n    \"Description\": \"Apply eye drops three times a day\",\r\n    \"ExpiryDate\": \"2026-04-01T00:00:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:44316/api/quotes/7/status",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44316",
+							"path": [
+								"api",
+								"quotes",
+								"7",
+								"status"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Recipes",
+			"item": [
+				{
+					"name": "RecipesGetByPatient",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImFkbWluIiwibmFtZWlkIjoiMSIsIm5iZiI6MTc0MjIyMDM5OCwiZXhwIjoxNzQyMjIwNjk4LCJpYXQiOjE3NDIyMjAzOTgsImlzcyI6InRlc3QtaXNzdWVyIiwiYXVkIjoidGVzdC1hdWRpZW5jZSJ9.81qGW8Hkw6R3RdzFqkbxZuC8HYQJaFwWnWszkzf6UbE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:44331/api/recipes/patient/2",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44331",
+							"path": [
+								"api",
+								"recipes",
+								"patient",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RecipesUpdateRecipeStatus",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Status\": \"Expired\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:44331/api/recipes/5/status",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44331",
+							"path": [
+								"api",
+								"recipes",
+								"5",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RecipesGetByRecipeCode",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:44331/api/recipes/RX1003",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44331",
+							"path": [
+								"api",
+								"recipes",
+								"RX1003"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RecipesCreated",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Code\": \"RX1007\",\r\n    \"PatientId\": 8,\r\n    \"Description\": \"Dissolve effervescent tablet in water before drinking\",\r\n    \"ExpiryDate\": \"2026-02-21T00:00:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:44331/api/recipes",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44331",
+							"path": [
+								"api",
+								"recipes"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Authorization",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Username\":\"admin\",\r\n    \"Password\":\"123456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:44336/api/auth/login",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44336",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

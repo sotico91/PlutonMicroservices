@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
+using Autofac;
+using MSRecipes.Application.DTOs;
 using MSRecipes.Application.Interfaces;
-using MSRecipes.Application.Services;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
@@ -10,77 +12,68 @@ namespace MSRecipes.Infrastructure.Messaging
 {
     public class RabbitMQService : IRabbitMQService
     {
-        private readonly string _hostname;
+        private readonly IComponentContext _componentContext;
         private readonly string _queueName;
-        private readonly RecipeService _recipeService;
 
-        public RabbitMQService(string hostname, string queueName, RecipeService recipeService)
+        public RabbitMQService(IComponentContext componentContext, string queueName)
         {
-            _hostname = hostname;
+            _componentContext = componentContext;
             _queueName = queueName;
-            _recipeService = recipeService;
         }
 
         public void StartListening()
         {
+            var factory = new ConnectionFactory() { HostName = "localhost", UserName = "admin", Password = "admin" };
+            var connection = factory.CreateConnection();
+            var channel = connection.CreateModel();
 
-            Console.WriteLine("Esperando mensajes...");
+            string exchangeName = "custom.direct";
 
-            var factory = new ConnectionFactory() { HostName = _hostname };
-            using (var connection = factory.CreateConnection())
-            using (var channel = connection.CreateModel())
+            channel.ExchangeDeclare(exchange: exchangeName, type: ExchangeType.Direct, durable: true, autoDelete: false);
+            channel.QueueDeclare(queue: _queueName, durable: true, exclusive: false, autoDelete: false, arguments: null);
+            channel.QueueBind(queue: _queueName, exchange: exchangeName, routingKey: "recipesQueue");
+
+            var consumer = new EventingBasicConsumer(channel);
+
+            System.Diagnostics.Debug.WriteLine("Antes de ... MSRecipes");
+
+            consumer.Received += async (model, ea) =>
             {
-                channel.QueueDeclare(queue: _queueName,
-                                     durable: false,
-                                     exclusive: false,
-                                     autoDelete: false,
-                                     arguments: null);
+                var body = ea.Body.ToArray();
+                var message = Encoding.UTF8.GetString(body);
 
-                var consumer = new EventingBasicConsumer(channel);
-
-                consumer.Received += async (model, ea) =>
+                try
                 {
-                    var body = ea.Body.ToArray();
-                    var message = Encoding.UTF8.GetString(body);
+                    var createRecipeDto = JsonSerializer.Deserialize<CreateRecipeDto>(message);
 
-                    Console.WriteLine($"Mensaje recibido: {message}");
-
-                    try
+                    using (var scope = _componentContext.Resolve<ILifetimeScope>().BeginLifetimeScope())
                     {
-                        // Simulación de procesamiento
-                        await Task.Delay(1000);
-
-                        // Aquí deberías llamar a tu método de negocio
-                        await HandleMessageAsync(message);
-
-                        // Confirmar el mensaje para que RabbitMQ lo elimine de la cola
-                        channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
+                        var recipeService = scope.Resolve<IRecipeService>();
+                        await recipeService.CreateRecipeAsync(createRecipeDto);
                     }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Error procesando mensaje: {ex.Message}");
-                    }
-                };
 
-                channel.BasicConsume(queue: _queueName, autoAck: false, consumer: consumer);
+                    System.Diagnostics.Debug.WriteLine($"Recibido y procesado en MSRecipes: {message}");
 
-                Console.WriteLine("Consumidor iniciado, esperando mensajes...");
+                  
+                    channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error procesando mensaje: {ex.Message}");
 
-                // Mantener la aplicación en ejecución
-                while (true) { }
-            }
+                    channel.BasicNack(deliveryTag: ea.DeliveryTag, multiple: false, requeue: true);
+                }
+            };
+
+    
+            channel.BasicConsume(queue: _queueName, autoAck: false, consumer: consumer);
         }
 
-    private async Task HandleMessageAsync(string message)
+        async Task IRabbitMQService.HandleMessageAsync(string message)
         {
             Console.WriteLine($"Procesando mensaje: {message}");
-            // Aquí debes implementar la lógica para actualizar la base de datos
-            await Task.Delay(500); // Simulación de trabajo
-        }
-
-        Task IRabbitMQService.HandleMessageAsync(string message)
-        {
-            return HandleMessageAsync(message);
+        
+            await Task.Delay(500);
         }
     } 
   

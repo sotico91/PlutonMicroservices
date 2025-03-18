@@ -37,23 +37,22 @@ namespace MSPerson.Tests
             [Fact]
             public void CreatePersonDto_Name_ShouldNotBeNull()
             {
-                // Arrange
+ 
                 _createPersonDto.Name = null;
 
-                // Act & Assert
+
                 Assert.Null(_createPersonDto.Name);
             }
 
             [Fact]
             public void CreatePersonDto_Email_ShouldBeValidFormat()
             {
-                // Arrange
+
                 _createPersonDto.Email = "invalid-email";
 
-                // Act
                 var isValidEmail = _createPersonDto.Email.Contains("@");
 
-                // Assert
+
                 Assert.False(isValidEmail);
             }
         }

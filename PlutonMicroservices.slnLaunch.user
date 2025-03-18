@@ -12,11 +12,11 @@
         "DebugTarget": "IIS Express (Google Chrome)"
       },
       {
-        "Path": "MSPerson\\MSPerson.csproj",
+        "Path": "MSRecipes\\MSRecipes.csproj",
         "Action": "Start"
       },
       {
-        "Path": "MSRecipes\\MSRecipes.csproj",
+        "Path": "MSPerson\\MSPerson.csproj",
         "Action": "Start"
       }
     ]

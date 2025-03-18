@@ -14,9 +14,9 @@ namespace MSQuotes.Application.Services
 	{
 
         private readonly IQuoteRepository _quoteRepository;
-        private readonly RabbitMQService _rabbitMQService;
+        private readonly IRabbitMQService _rabbitMQService;
 
-        public QuoteService(IQuoteRepository quoteRepository, RabbitMQService rabbitMQService)
+        public QuoteService(IQuoteRepository quoteRepository, IRabbitMQService rabbitMQService)
         {
             _quoteRepository = quoteRepository;
             _rabbitMQService = rabbitMQService;

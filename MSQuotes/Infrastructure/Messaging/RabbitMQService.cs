@@ -1,10 +1,11 @@
-﻿using RabbitMQ.Client;
+﻿using MSQuotes.Application.Interfaces;
+using RabbitMQ.Client;
 using System.Text;
 
 namespace MSQuotes.Infrastructure.Messaging
 {
-	public class RabbitMQService
-	{
+	public class RabbitMQService : IRabbitMQService
+    {
         private readonly string _hostname;
         private readonly string _queueName;
 

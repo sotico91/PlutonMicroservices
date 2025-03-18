@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
+using MSRecipes.Application.Interfaces;
 using MSRecipes.Application.Services;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
 namespace MSRecipes.Infrastructure.Messaging
 {
-    public class RabbitMQService
+    public class RabbitMQService : IRabbitMQService
     {
         private readonly string _hostname;
         private readonly string _queueName;
@@ -42,7 +43,7 @@ namespace MSRecipes.Infrastructure.Messaging
                     var body = ea.Body.ToArray();
                     var message = Encoding.UTF8.GetString(body);
 
-                    Console.WriteLine($"📩 Mensaje recibido: {message}");
+                    Console.WriteLine($"Mensaje recibido: {message}");
 
                     try
                     {
@@ -57,13 +58,13 @@ namespace MSRecipes.Infrastructure.Messaging
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"❌ Error procesando mensaje: {ex.Message}");
+                        Console.WriteLine($"Error procesando mensaje: {ex.Message}");
                     }
                 };
 
                 channel.BasicConsume(queue: _queueName, autoAck: false, consumer: consumer);
 
-                Console.WriteLine("✅ Consumidor iniciado, esperando mensajes...");
+                Console.WriteLine("Consumidor iniciado, esperando mensajes...");
 
                 // Mantener la aplicación en ejecución
                 while (true) { }
@@ -72,9 +73,14 @@ namespace MSRecipes.Infrastructure.Messaging
 
     private async Task HandleMessageAsync(string message)
         {
-            Console.WriteLine($"📌 Procesando mensaje: {message}");
+            Console.WriteLine($"Procesando mensaje: {message}");
             // Aquí debes implementar la lógica para actualizar la base de datos
             await Task.Delay(500); // Simulación de trabajo
+        }
+
+        Task IRabbitMQService.HandleMessageAsync(string message)
+        {
+            return HandleMessageAsync(message);
         }
     } 
   

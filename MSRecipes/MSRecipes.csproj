@@ -252,6 +252,7 @@
     <Compile Include="Application\DTOs\RecipeDto.cs" />
     <Compile Include="Application\DTOs\UpdateRecipeStatusDto.cs" />
     <Compile Include="Application\Handlers\GetRecipeByCodeHandler.cs" />
+    <Compile Include="Application\Interfaces\IRabbitMQService.cs" />
     <Compile Include="Application\Interfaces\IRecipeRepository.cs" />
     <Compile Include="Application\Interfaces\IRecipeService.cs" />
     <Compile Include="Application\Queries\GetRecipeByCodeQuery.cs" />
@@ -269,7 +270,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\Messaging\RabbitMQService.cs" />
-    <Compile Include="Infrastructure\repositories\Data\RecipeDbContext.cs" />
+    <Compile Include="Infrastructure\Data\RecipeDbContext.cs" />
     <Compile Include="Infrastructure\repositories\RecipeRepository.cs" />
     <Compile Include="Migrations\202503111358326_InitialCreate.cs" />
     <Compile Include="Migrations\202503111358326_InitialCreate.Designer.cs">
@@ -278,6 +279,15 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Tests\CreateRecipeDtoTests.cs" />
+    <Compile Include="Tests\GetRecipeByCodeHandlerTests.cs" />
+    <Compile Include="Tests\GetRecipeByCodeQueryTests.cs" />
+    <Compile Include="Tests\IRabbitMQServiceTests.cs" />
+    <Compile Include="Tests\IRecipeRepositoryTests.cs" />
+    <Compile Include="Tests\IRecipeServiceTests.cs" />
+    <Compile Include="Tests\RecipeDtoTests.cs" />
+    <Compile Include="Tests\RecipeServiceTests.cs" />
+    <Compile Include="Tests\UpdateRecipeStatusDtoTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
@@ -291,7 +301,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Tests\" />
     <Folder Include="Views\Recipes\" />
   </ItemGroup>
   <ItemGroup>

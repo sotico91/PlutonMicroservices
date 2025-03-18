@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Moq;
 using MSQuotes.Application.DTOs;
 using MSQuotes.Application.Interfaces;
-using MSQuotes.Domain;
 using Xunit;
 
 namespace MSQuotes.Tests

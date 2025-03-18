@@ -35,7 +35,7 @@ namespace MSRecipes
 
             // REGISTRA RABBITMQ CON INYECCIÓN DE RECIPE SERVICE
             builder.RegisterType<RabbitMQService>()
-                .AsSelf()
+                .As<IRabbitMQService>()
                 .WithParameter("hostname", "localhost")
                 .WithParameter("queueName", "recipes")
                 .WithParameter(new ResolvedParameter(

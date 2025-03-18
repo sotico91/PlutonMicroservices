@@ -254,6 +254,7 @@
     <Compile Include="Application\Handlers\GetQuoteByIdHandler.cs" />
     <Compile Include="Application\Interfaces\IQuoteRepository.cs" />
     <Compile Include="Application\Interfaces\IQuoteService.cs" />
+    <Compile Include="Application\Interfaces\IRabbitMQService.cs" />
     <Compile Include="Application\Queries\GetQuoteByIdQuery.cs" />
     <Compile Include="Tests\GetQuoteByIdHandlerTests.cs" />
     <Compile Include="Tests\IQuoteRepositoryTests.cs" />
@@ -283,6 +284,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Tests\CreateQuoteDtoTests.cs" />
+    <Compile Include="Tests\QuoteServiceTests.cs" />
     <Compile Include="Tests\UpdateQuoteStatusDtoTests.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -22,7 +22,7 @@ namespace MSQuotes
             builder.RegisterType<QuoteDbContext>().InstancePerRequest();
             builder.RegisterType<QuoteRepository>().As<IQuoteRepository>().InstancePerRequest();
             builder.RegisterType<QuoteService>().InstancePerRequest();
-            builder.RegisterType<RabbitMQService>().AsSelf().WithParameter("hostname", "localhost").WithParameter("queueName", "prescriptions");
+            builder.RegisterType<RabbitMQService>().As<IRabbitMQService>().WithParameter("hostname", "localhost").WithParameter("queueName", "prescriptions");
 
             builder.Register<ServiceFactory>(ctx =>
             {

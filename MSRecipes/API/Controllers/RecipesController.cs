@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Web.Http;
+using MediatR;
+using MSRecipes.Application.Commands;
 using MSRecipes.Application.DTOs;
-using MSRecipes.Application.Interfaces;
+using MSRecipes.Application.Queries;
 
 namespace MSRecipes.API.Controllers
 {
     [RoutePrefix("api/recipes")]
     public class RecipesController : ApiController
     {
-        private readonly IRecipeService _recipeService;
+        private readonly IMediator _mediator;
 
-        public RecipesController(IRecipeService recipeService)
+        public RecipesController(IMediator mediator)
         {
-            _recipeService = recipeService;
+            _mediator = mediator;
         }
 
         [Authorize]
@@ -23,8 +25,16 @@ namespace MSRecipes.API.Controllers
         {
             try
             {
-                await _recipeService.CreateRecipeAsync(createRecipeDto);
-                return Created("", createRecipeDto);
+                var command = new CreateRecipeCommand
+                {
+                    Code = createRecipeDto.Code,
+                    PatientId = createRecipeDto.PatientId,
+                    Description = createRecipeDto.Description,
+                    ExpiryDate = createRecipeDto.ExpiryDate
+                };
+
+                var result = await _mediator.Send(command);
+                return Created("", result);
             }
             catch (Exception ex)
             {
@@ -39,7 +49,13 @@ namespace MSRecipes.API.Controllers
         {
             try
             {
-                await _recipeService.UpdateRecipeStatusAsync(id, updateRecipeStatusDto);
+                var command = new UpdateRecipeCommand
+                {
+                    Id = id,
+                    Status = updateRecipeStatusDto.Status
+                };
+
+                await _mediator.Send(command);
                 return Ok();
             }
             catch (Exception ex)
@@ -55,7 +71,8 @@ namespace MSRecipes.API.Controllers
         {
             try
             {
-                var recipe = await _recipeService.GetRecipeByCodeAsync(code);
+                var query = new GetRecipeByCodeQuery(code);
+                var recipe = await _mediator.Send(query);
                 return Ok(recipe);
             }
             catch (Exception ex)
@@ -71,7 +88,8 @@ namespace MSRecipes.API.Controllers
         {
             try
             {
-                var recipes = await _recipeService.GetRecipesByPatientIdAsync(patientId);
+                var query = new GetRecipesByPatientIdQuery(patientId);
+                var recipes = await _mediator.Send(query);
                 return Ok(recipes);
             }
             catch (Exception ex)

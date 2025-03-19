@@ -2,88 +2,59 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MediatR;
+using MSRecipes.Application.Commands;
 using MSRecipes.Application.DTOs;
 using MSRecipes.Application.Interfaces;
+using MSRecipes.Application.Queries;
 using MSRecipes.Domain;
 
 namespace MSRecipes.Application.Services
 {
-	public class RecipeService : IRecipeService
-	{
-        private readonly IRecipeRepository _recipeRepository;
+    public class RecipeService : IRecipeService
+    {
+        private readonly IMediator _mediator;
 
-        public RecipeService(IRecipeRepository recipeRepository)
+        public RecipeService(IMediator mediator)
         {
-            _recipeRepository = recipeRepository;
+            _mediator = mediator;
         }
 
-        public async Task CreateRecipeAsync(CreateRecipeDto createRecipeDto)
+        public async Task<int> CreateRecipeAsync(CreateRecipeDto createRecipeDto)
         {
-            var recipe = new Recipe
+            var command = new CreateRecipeCommand
             {
                 Code = createRecipeDto.Code,
                 PatientId = createRecipeDto.PatientId,
                 Description = createRecipeDto.Description,
-                CreatedDate = DateTime.UtcNow,
-                ExpiryDate = createRecipeDto.ExpiryDate,
-                Status = RecipeStatus.Active
+                ExpiryDate = createRecipeDto.ExpiryDate
             };
 
-            await _recipeRepository.AddAsync(recipe);
+            return await _mediator.Send(command);
         }
 
-        public async Task UpdateRecipeStatusAsync(int Id, UpdateRecipeStatusDto updateRecipeStatusDto)
+        public async Task UpdateRecipeStatusAsync(int id, UpdateRecipeStatusDto updateRecipeStatusDto)
         {
-            var recipe = await _recipeRepository.GetByIdAsync(Id);
-            if (recipe == null)
-            {
-                throw new ArgumentException("Recipe not found");
-            }
-
-            if (Enum.TryParse(updateRecipeStatusDto.Status, out RecipeStatus status))
-            {
-                recipe.Status = status;
-                await _recipeRepository.UpdateAsync(recipe);
-            }
-            else
-            {
+            if (!Enum.TryParse(updateRecipeStatusDto.Status, out RecipeStatus status))
                 throw new ArgumentException("Invalid status value");
-            }
+
+            var command = new UpdateRecipeCommand
+            {
+                Id = id,
+                Status = status.ToString()
+            };
+
+            await _mediator.Send(command);
         }
 
         public async Task<RecipeDto> GetRecipeByCodeAsync(string code)
         {
-            var recipe = await _recipeRepository.GetByCodeAsync(code);
-            if (recipe == null)
-            {
-                throw new ArgumentException("Recipe not found");
-            }
-
-            return new RecipeDto
-            {
-                Id = recipe.Id,
-                Code = recipe.Code,
-                PatientId = recipe.PatientId,
-                Description = recipe.Description,
-                CreatedDate = recipe.CreatedDate,
-                ExpiryDate = recipe.ExpiryDate,
-                Status = recipe.Status.ToString()
-            };
+            return await _mediator.Send(new GetRecipeByCodeQuery(code));
         }
 
-        public async Task<List<RecipeDto>> GetRecipesByPatientIdAsync(int patientId)
+        public async Task<IEnumerable<RecipeDto>> GetRecipesByPatientIdAsync(int patientId)
         {
-            var recipes = await _recipeRepository.GetByPatientIdAsync(patientId);
-            return recipes.Select(r => new RecipeDto
-            {
-                Id = r.Id,
-                Code = r.Code,
-                PatientId = r.PatientId,
-                Description = r.Description,
-                CreatedDate = r.CreatedDate,
-                ExpiryDate = r.ExpiryDate,
-                Status = r.Status.ToString()
-            }).ToList();
+            return await _mediator.Send(new GetRecipesByPatientIdQuery(patientId));
         }
     }
 }

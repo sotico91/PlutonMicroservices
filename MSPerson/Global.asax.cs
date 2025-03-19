@@ -20,29 +20,20 @@ namespace MSPerson
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
             builder.RegisterType<PeopleDbContext>().InstancePerRequest();
             builder.RegisterType<PersonRepository>().As<IPersonRepository>().InstancePerRequest();
-            builder.RegisterAssemblyTypes(typeof(IMediator).Assembly).AsImplementedInterfaces();
+
+            builder.RegisterType<Mediator>().As<IMediator>().InstancePerLifetimeScope();
+
+            builder.RegisterAssemblyTypes(typeof(GetPersonByIdHandler).Assembly)
+                .AsClosedTypesOf(typeof(IRequestHandler<,>))
+                .InstancePerRequest();
+
+            builder.RegisterType<PersonService>().As<IPersonService>().InstancePerRequest();
+
             builder.Register<ServiceFactory>(ctx =>
             {
                 var c = ctx.Resolve<IComponentContext>();
                 return t => c.Resolve(t);
             });
-
-            builder.RegisterType<Mediator>()
-              .As<IMediator>()
-              .InstancePerLifetimeScope();
-
-            // 🔹 **Registrar los Handlers de MediatR**
-            builder.RegisterAssemblyTypes(typeof(GetPersonByIdHandler).Assembly)
-                .AsClosedTypesOf(typeof(IRequestHandler<,>))
-                .InstancePerRequest();
-
-            builder.RegisterAssemblyTypes(typeof(GetPersonByIdHandler).GetTypeInfo().Assembly)
-            .AsImplementedInterfaces();
-
-
-            builder.RegisterType<PersonService>()
-                .As<IPersonService>()
-                .InstancePerRequest();
 
             var container = builder.Build();
             GlobalConfiguration.Configuration.DependencyResolver = new AutofacWebApiDependencyResolver(container);

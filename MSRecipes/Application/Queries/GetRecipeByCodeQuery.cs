@@ -5,7 +5,11 @@ namespace MSRecipes.Application.Queries
 {
     public class GetRecipeByCodeQuery : IRequest<RecipeDto>
     {
-        public string Code { get; set; }
-        public GetRecipeByCodeQuery(string code) => Code = code;
+        public string Code { get; }
+
+    public GetRecipeByCodeQuery(string code)
+    {
+        Code = code;
     }
+}
 }

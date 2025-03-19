@@ -3,8 +3,32 @@
   "WorkspaceRootPath": "C:\\Users\\edgar-david.velasco\\source\\repos\\PlutonMicroservices\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{B7228624-B7AB-4DE4-9ABF-A799E157E2E4}|MSRecipes\\MSRecipes.csproj|c:\\users\\edgar-david.velasco\\source\\repos\\plutonmicroservices\\msrecipes\\infrastructure\\messaging\\rabbitmqservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B7228624-B7AB-4DE4-9ABF-A799E157E2E4}|MSRecipes\\MSRecipes.csproj|solutionrelative:msrecipes\\infrastructure\\messaging\\rabbitmqservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{AC3AAF20-6FB7-417C-A15D-86266ECAF381}|MSQuotes\\MSQuotes.csproj|c:\\users\\edgar-david.velasco\\source\\repos\\plutonmicroservices\\msquotes\\application\\services\\quoteservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AC3AAF20-6FB7-417C-A15D-86266ECAF381}|MSQuotes\\MSQuotes.csproj|solutionrelative:msquotes\\application\\services\\quoteservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AC3AAF20-6FB7-417C-A15D-86266ECAF381}|MSQuotes\\MSQuotes.csproj|c:\\users\\edgar-david.velasco\\source\\repos\\plutonmicroservices\\msquotes\\application\\dtos\\updatequotestatusdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AC3AAF20-6FB7-417C-A15D-86266ECAF381}|MSQuotes\\MSQuotes.csproj|solutionrelative:msquotes\\application\\dtos\\updatequotestatusdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AC3AAF20-6FB7-417C-A15D-86266ECAF381}|MSQuotes\\MSQuotes.csproj|c:\\users\\edgar-david.velasco\\source\\repos\\plutonmicroservices\\msquotes\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AC3AAF20-6FB7-417C-A15D-86266ECAF381}|MSQuotes\\MSQuotes.csproj|solutionrelative:msquotes\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AC3AAF20-6FB7-417C-A15D-86266ECAF381}|MSQuotes\\MSQuotes.csproj|c:\\users\\edgar-david.velasco\\source\\repos\\plutonmicroservices\\msquotes\\domain\\quotestatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AC3AAF20-6FB7-417C-A15D-86266ECAF381}|MSQuotes\\MSQuotes.csproj|solutionrelative:msquotes\\domain\\quotestatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B7228624-B7AB-4DE4-9ABF-A799E157E2E4}|MSRecipes\\MSRecipes.csproj|c:\\users\\edgar-david.velasco\\source\\repos\\plutonmicroservices\\msrecipes\\api\\controllers\\recipescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B7228624-B7AB-4DE4-9ABF-A799E157E2E4}|MSRecipes\\MSRecipes.csproj|solutionrelative:msrecipes\\api\\controllers\\recipescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B7228624-B7AB-4DE4-9ABF-A799E157E2E4}|MSRecipes\\MSRecipes.csproj|c:\\users\\edgar-david.velasco\\source\\repos\\plutonmicroservices\\msrecipes\\application\\handlers\\getrecipebycodehandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B7228624-B7AB-4DE4-9ABF-A799E157E2E4}|MSRecipes\\MSRecipes.csproj|solutionrelative:msrecipes\\application\\handlers\\getrecipebycodehandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B7228624-B7AB-4DE4-9ABF-A799E157E2E4}|MSRecipes\\MSRecipes.csproj|c:\\users\\edgar-david.velasco\\source\\repos\\plutonmicroservices\\msrecipes\\application\\queries\\getrecipebycodequery.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B7228624-B7AB-4DE4-9ABF-A799E157E2E4}|MSRecipes\\MSRecipes.csproj|solutionrelative:msrecipes\\application\\queries\\getrecipebycodequery.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,19 +38,97 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "RabbitMQService.cs",
-              "DocumentMoniker": "C:\\Users\\edgar-david.velasco\\source\\repos\\PlutonMicroservices\\MSRecipes\\Infrastructure\\Messaging\\RabbitMQService.cs",
-              "RelativeDocumentMoniker": "MSRecipes\\Infrastructure\\Messaging\\RabbitMQService.cs",
-              "ToolTip": "C:\\Users\\edgar-david.velasco\\source\\repos\\PlutonMicroservices\\MSRecipes\\Infrastructure\\Messaging\\RabbitMQService.cs",
-              "RelativeToolTip": "MSRecipes\\Infrastructure\\Messaging\\RabbitMQService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 2,
+              "Title": "Startup.cs",
+              "DocumentMoniker": "C:\\Users\\edgar-david.velasco\\source\\repos\\PlutonMicroservices\\MSQuotes\\Startup.cs",
+              "RelativeDocumentMoniker": "MSQuotes\\Startup.cs",
+              "ToolTip": "C:\\Users\\edgar-david.velasco\\source\\repos\\PlutonMicroservices\\MSQuotes\\Startup.cs",
+              "RelativeToolTip": "MSQuotes\\Startup.cs",
+              "ViewState": "AgIAABAAAAAAAAAAAAAQwCkAAAA6AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-18T19:30:08.43Z",
+              "WhenOpened": "2025-03-19T21:32:21.502Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "QuoteStatus.cs",
+              "DocumentMoniker": "C:\\Users\\edgar-david.velasco\\source\\repos\\PlutonMicroservices\\MSQuotes\\Domain\\QuoteStatus.cs",
+              "RelativeDocumentMoniker": "MSQuotes\\Domain\\QuoteStatus.cs",
+              "ToolTip": "C:\\Users\\edgar-david.velasco\\source\\repos\\PlutonMicroservices\\MSQuotes\\Domain\\QuoteStatus.cs",
+              "RelativeToolTip": "MSQuotes\\Domain\\QuoteStatus.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-19T21:29:39.36Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "UpdateQuoteStatusDto.cs",
+              "DocumentMoniker": "C:\\Users\\edgar-david.velasco\\source\\repos\\PlutonMicroservices\\MSQuotes\\Application\\DTOs\\UpdateQuoteStatusDto.cs",
+              "RelativeDocumentMoniker": "MSQuotes\\Application\\DTOs\\UpdateQuoteStatusDto.cs",
+              "ToolTip": "C:\\Users\\edgar-david.velasco\\source\\repos\\PlutonMicroservices\\MSQuotes\\Application\\DTOs\\UpdateQuoteStatusDto.cs",
+              "RelativeToolTip": "MSQuotes\\Application\\DTOs\\UpdateQuoteStatusDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-19T21:29:34.315Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "QuoteService.cs",
+              "DocumentMoniker": "C:\\Users\\edgar-david.velasco\\source\\repos\\PlutonMicroservices\\MSQuotes\\Application\\Services\\QuoteService.cs",
+              "RelativeDocumentMoniker": "MSQuotes\\Application\\Services\\QuoteService.cs",
+              "ToolTip": "C:\\Users\\edgar-david.velasco\\source\\repos\\PlutonMicroservices\\MSQuotes\\Application\\Services\\QuoteService.cs",
+              "RelativeToolTip": "MSQuotes\\Application\\Services\\QuoteService.cs",
+              "ViewState": "AgIAACkAAAAAAAAAAAAAwDQAAABZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-19T21:28:30.704Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "GetRecipeByCodeHandler.cs",
+              "DocumentMoniker": "C:\\Users\\edgar-david.velasco\\source\\repos\\PlutonMicroservices\\MSRecipes\\Application\\Handlers\\GetRecipeByCodeHandler.cs",
+              "RelativeDocumentMoniker": "MSRecipes\\Application\\Handlers\\GetRecipeByCodeHandler.cs",
+              "ToolTip": "C:\\Users\\edgar-david.velasco\\source\\repos\\PlutonMicroservices\\MSRecipes\\Application\\Handlers\\GetRecipeByCodeHandler.cs",
+              "RelativeToolTip": "MSRecipes\\Application\\Handlers\\GetRecipeByCodeHandler.cs",
+              "ViewState": "AgIAABgAAAAAAAAAAAAYwBkAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-19T21:21:52.944Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "GetRecipeByCodeQuery.cs",
+              "DocumentMoniker": "C:\\Users\\edgar-david.velasco\\source\\repos\\PlutonMicroservices\\MSRecipes\\Application\\Queries\\GetRecipeByCodeQuery.cs",
+              "RelativeDocumentMoniker": "MSRecipes\\Application\\Queries\\GetRecipeByCodeQuery.cs",
+              "ToolTip": "C:\\Users\\edgar-david.velasco\\source\\repos\\PlutonMicroservices\\MSRecipes\\Application\\Queries\\GetRecipeByCodeQuery.cs",
+              "RelativeToolTip": "MSRecipes\\Application\\Queries\\GetRecipeByCodeQuery.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAuwAkAAAALAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-19T21:21:35.63Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "RecipesController.cs",
+              "DocumentMoniker": "C:\\Users\\edgar-david.velasco\\source\\repos\\PlutonMicroservices\\MSRecipes\\API\\Controllers\\RecipesController.cs",
+              "RelativeDocumentMoniker": "MSRecipes\\API\\Controllers\\RecipesController.cs",
+              "ToolTip": "C:\\Users\\edgar-david.velasco\\source\\repos\\PlutonMicroservices\\MSRecipes\\API\\Controllers\\RecipesController.cs",
+              "RelativeToolTip": "MSRecipes\\API\\Controllers\\RecipesController.cs",
+              "ViewState": "AgIAACEAAAAAAAAAAAAmwE8AAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-19T21:15:55.032Z",
               "EditorCaption": ""
             }
           ]

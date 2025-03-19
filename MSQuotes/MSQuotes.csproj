@@ -248,13 +248,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\Controllers\QuotesController.cs" />
+    <Compile Include="Application\Commands\CreateQuoteCommand.cs" />
+    <Compile Include="Application\Commands\UpdateQuoteStatusCommand.cs" />
     <Compile Include="Application\DTOs\CreateQuoteDto.cs" />
     <Compile Include="Application\DTOs\QuoteDto.cs" />
     <Compile Include="Application\DTOs\UpdateQuoteStatusDto.cs" />
+    <Compile Include="Application\Factories\QuoteFactory.cs" />
+    <Compile Include="Application\Handlers\CreateQuoteCommandHandler.cs" />
     <Compile Include="Application\Handlers\GetQuoteByIdHandler.cs" />
+    <Compile Include="Application\Handlers\UpdateQuoteStatusCommandHandler.cs" />
     <Compile Include="Application\Interfaces\IQuoteRepository.cs" />
     <Compile Include="Application\Interfaces\IQuoteService.cs" />
     <Compile Include="Application\Interfaces\IRabbitMQService.cs" />
+    <Compile Include="Application\Queries\GetAllQuotesQuery.cs" />
     <Compile Include="Application\Queries\GetQuoteByIdQuery.cs" />
     <Compile Include="Tests\GetQuoteByIdHandlerTests.cs" />
     <Compile Include="Tests\IQuoteRepositoryTests.cs" />
@@ -316,6 +322,7 @@
       <Name>MSRecipes</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

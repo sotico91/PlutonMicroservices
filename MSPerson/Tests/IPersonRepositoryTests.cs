@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Moq;
@@ -21,7 +22,7 @@ namespace MSPerson.Tests
         public async Task GetByIdAsync_ShouldReturnPerson_WhenPersonExists()
         {
             var personId = 1;
-            var expectedPerson = new Person { Id = personId, Name = "Carlos Mina" };
+            var expectedPerson = Person.Create("Nestur Alvarez", "PS", "12345678", DateTime.Now, "1234567890", "email@example.com", PersonType.Patient);
 
             _repositoryMock
                 .Setup(repo => repo.GetByIdAsync(personId))
@@ -53,8 +54,8 @@ namespace MSPerson.Tests
         {
             var persons = new List<Person>
             {
-                new Person { Id = 1, Name = "Carlos Mina" },
-                new Person { Id = 2, Name = "Carolina Perez" }
+               Person.Create("Nestur Alvarez", "PS", "12345678", DateTime.Now, "1234567890", "nesturAlva@example.com", PersonType.Patient),
+              Person.Create("Andrea Blanco", "PS", "123411478", DateTime.Now, "1234566690", "Andreblanco@example.com", PersonType.Doctor)
             };
 
             _repositoryMock
@@ -70,7 +71,7 @@ namespace MSPerson.Tests
         [Fact]
         public async Task AddAsync_ShouldCallRepositoryOnce()
         {
-            var person = new Person { Id = 1, Name = "Carlos Mina" };
+            var person = Person.Create("Carlos Mina", "PS", "54233669", DateTime.Now, "5578899", "carlosMina@example.com", PersonType.Patient);
 
             _repositoryMock
                 .Setup(repo => repo.AddAsync(person))
@@ -82,7 +83,7 @@ namespace MSPerson.Tests
         [Fact]
         public async Task UpdateAsync_ShouldCallRepositoryOnce()
         {
-            var person = new Person { Id = 1, Name = "Carlos Mina" };
+            var person = Person.Create("Carlos Mina", "PS", "54233669", DateTime.Now, "5578899", "carlosMina@example.com", PersonType.Patient);
 
             _repositoryMock
                 .Setup(repo => repo.UpdateAsync(person))

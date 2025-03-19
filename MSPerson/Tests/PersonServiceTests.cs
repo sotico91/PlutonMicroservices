@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MediatR;
 using Moq;
+using MSPerson.Application.Commands;
 using MSPerson.Application.DTOs;
-using MSPerson.Application.interfaces;
+using MSPerson.Application.Interfaces;
+using MSPerson.Application.Queries;
 using MSPerson.Application.Services;
 using MSPerson.Domain;
 using Xunit;
@@ -12,13 +15,15 @@ namespace MSPerson.Tests
 {
 	public class PersonServiceTests
     {
-        private readonly Mock<IPersonRepository> _personRepositoryMock;
-        private readonly PersonService _personService;
+        private readonly Mock<IMediator> _mediatorMock;
+        private readonly Mock<IPersonService> _personServiceMock;
+        private readonly IPersonService _personService;
 
         public PersonServiceTests()
         {
-            _personRepositoryMock = new Mock<IPersonRepository>();
-            _personService = new PersonService(_personRepositoryMock.Object);
+            _mediatorMock = new Mock<IMediator>();
+            _personServiceMock = new Mock<IPersonService>();
+            _personService = new PersonService(_mediatorMock.Object);
         }
 
         [Fact]
@@ -35,9 +40,14 @@ namespace MSPerson.Tests
                 PersonType = "Patient"
             };
 
-            await _personService.CreatePerson(createPersonDto);
 
-            _personRepositoryMock.Verify(repo => repo.AddAsync(It.IsAny<Person>()), Times.Once);
+            _mediatorMock.Setup(m => m.Send(It.IsAny<CreatePersonCommand>(), default))
+                  .ReturnsAsync(1);
+
+            var result = await _personService.CreatePerson(createPersonDto);
+
+            Assert.Equal(1, result);
+            _mediatorMock.Verify(m => m.Send(It.IsAny<CreatePersonCommand>(), default), Times.Once);
         }
 
         [Fact]
@@ -45,40 +55,42 @@ namespace MSPerson.Tests
         {
             var persons = new List<Person>
             {
-                new Person { Id = 1, Name = "Daniel Cardenas", PersonType = PersonType.Doctor },
-                new Person { Id = 2, Name = "Jhon Torres", PersonType = PersonType.Patient }
+                Person.Create("Nestur Alvarez", "PS", "12345678", DateTime.Now, "1234567890", "nesturAlva@example.com", PersonType.Patient),
+                Person.Create("Jimena Cortes", "PS", "152545545", DateTime.Now, "587454548", "jimenaCor@example.com", PersonType.Doctor),
             };
 
-            _personRepositoryMock.Setup(repo => repo.GetAllAsync()).ReturnsAsync(persons);
+            _mediatorMock.Setup(m => m.Send(It.IsAny<GetAllPersonsQuery>(), default)).ReturnsAsync(persons);
 
             var result = await _personService.GetAllPersons();
 
             Assert.Equal(2, result.Count);
-            Assert.Equal("Daniel Cardenas", result[0].Name);
-            Assert.Equal("Jhon Torres", result[1].Name);
+            Assert.Equal("Nestur Alvarez", result[0].Name);
+            Assert.Equal("Jimena Cortes", result[1].Name);
+
+            _mediatorMock.Verify(m => m.Send(It.IsAny<GetAllPersonsQuery>(), default), Times.Once);
         }
 
         [Fact]
         public async Task UpdatePersonAsync_ShouldUpdatePerson_WhenPersonExists()
         {
-            var person = new Person { Id = 1, Name = "Carla Andrade", PersonType = PersonType.Doctor };
+            var person = Person.Create("Carla Andrade", "PP", "1555585", DateTime.Now, "84111", "carlaAndrade@example.com", PersonType.Patient);
 
             var updateDto = new UpdatePersonDto
             {
                 Name = "Carla Andrade linares",
-                DocumentType = "ps",
+                DocumentType = "PS",
                 DocumentNumber = "12345458",
                 DateOfBirth = new DateTime(1988, 04, 25),
                 PhoneNumber = "0987654321",
                 Email = "CarlaLinares@example.com",
-                PersonType = "Patient"
+                PersonType = "Doctor"
             };
 
-            _personRepositoryMock.Setup(repo => repo.GetByIdAsync(person.Id)).ReturnsAsync(person);
+            _mediatorMock.Setup(m => m.Send(It.IsAny<UpdatePersonCommand>(), default)).ReturnsAsync(true);
 
-            await _personService.UpdatePersonAsync(person.Id, updateDto);
+            await _personService.UpdatePersonAsync(1, updateDto);
 
-            _personRepositoryMock.Verify(repo => repo.UpdateAsync(It.IsAny<Person>()), Times.Once);
+            _mediatorMock.Verify(m => m.Send(It.IsAny<UpdatePersonCommand>(), default), Times.Once);
         }
 
         [Fact]
@@ -86,31 +98,33 @@ namespace MSPerson.Tests
         {
             var personId = 1;
 
+            _mediatorMock.Setup(m => m.Send(It.IsAny<DeletePersonCommand>(), default))
+             .ReturnsAsync(true);
+
             await _personService.DeletePersonAsync(personId);
 
-            _personRepositoryMock.Verify(repo => repo.DeleteAsync(personId), Times.Once);
+            _mediatorMock.Verify(m => m.Send(It.IsAny<DeletePersonCommand>(), default), Times.Once);
         }
 
         [Fact]
-        public void ConvertToDto_ShouldReturnPersonDto()
+        public async Task ConvertToDto_ShouldReturnPersonDtoAsync()
         {
-            var person = new Person
-            {
-                Id = 1,
-                Name = "Patricia Garcia",
-                DocumentType = "PS",
-                DocumentNumber = "123454589",
-                DateOfBirth = new DateTime(1985, 04, 20),
-                PhoneNumber = "123456714",
-                Email = "patico1988@example.com",
-                PersonType = PersonType.Patient
-            };
+            var person = Person.Create("Carla Andrade", "PP", "1555585", DateTime.Now, "84111", "carlaAndrade@example.com", PersonType.Patient);
+            
+            _mediatorMock.Setup(m => m.Send(It.IsAny<GetPersonByIdQuery>(), default)).ReturnsAsync(person);
 
-            var result = _personService.ConvertToDto(person);
-
+            var result = await _personService.GetPersonById(person.Id);
             Assert.NotNull(result);
             Assert.Equal(person.Id, result.Id);
             Assert.Equal(person.Name, result.Name);
+            Assert.Equal(person.DocumentType, result.DocumentType);
+            Assert.Equal(person.DocumentNumber, result.DocumentNumber);
+            Assert.Equal(person.DateOfBirth, result.DateOfBirth);
+            Assert.Equal(person.PhoneNumber, result.PhoneNumber);
+            Assert.Equal(person.Email, result.Email);
+            Assert.Equal(person.PersonType.ToString(), result.PersonType);
+
+            _mediatorMock.Verify(m => m.Send(It.IsAny<GetPersonByIdQuery>(), default), Times.Once);
         }
     }
 }

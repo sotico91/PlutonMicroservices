@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Moq;
 using MSPerson.Application.DTOs;
@@ -63,14 +64,26 @@ namespace MSPerson.Tests
         }
 
         [Fact]
-        public void ConvertToDto_ShouldReturnPersonDto()
+        public async Task ConvertToDto_ShouldReturnPersonDtoAsync()
         {
-            var person = new Person { Id = 1, Name = "Miguel" };
-            var expectedDto = new PersonDto { Id = 1, Name = "Miguel" };
+            var person = Person.Create("Miguel Morales", "PS", "25669", DateTime.Now, "12345612000", "miguelmora@example.com", PersonType.Patient);
+            var expectedDto = new PersonDto
+            {
 
-            _personServiceMock.Setup(service => service.ConvertToDto(person)).Returns(expectedDto);
 
-            var result = _personServiceMock.Object.ConvertToDto(person);
+                Id = person.Id,
+                Name = person.Name,
+                DocumentType = person.DocumentType,
+                DocumentNumber = person.DocumentNumber,
+                DateOfBirth = person.DateOfBirth,
+                PhoneNumber = person.PhoneNumber,
+                Email = person.Email,
+                PersonType = person.PersonType.ToString()
+            };
+
+            _personServiceMock.Setup(service => service.GetPersonById(person.Id)).ReturnsAsync(expectedDto);
+
+            var result = await _personServiceMock.Object.GetPersonById(person.Id);
 
             Assert.NotNull(result);
             Assert.Equal(expectedDto.Id, result.Id);

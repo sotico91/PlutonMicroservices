@@ -2,85 +2,71 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MediatR;
+using MSQuotes.Application.Commands;
 using MSQuotes.Application.DTOs;
 using MSQuotes.Application.Interfaces;
+using MSQuotes.Application.Queries;
 using MSQuotes.Domain;
-using MSQuotes.Infrastructure.Messaging;
-using MSRecipes.Application.DTOs;
 
 namespace MSQuotes.Application.Services
 {
 	public class QuoteService : IQuoteService
 	{
 
-        private readonly IQuoteRepository _quoteRepository;
-        private readonly IRabbitMQService _rabbitMQService;
+        private readonly IMediator _mediator;
 
-        public QuoteService(IQuoteRepository quoteRepository, IRabbitMQService rabbitMQService)
+        public QuoteService(IMediator mediator)
         {
-            _quoteRepository = quoteRepository;
-            _rabbitMQService = rabbitMQService;
+            _mediator = mediator;
         }
-
-        public async Task CreateQuoteAsync(CreateQuoteDto createQuoteDto)
+        public async Task<int> CreateQuoteAsync(CreateQuoteDto createQuoteDto)
         {
-            var quote = new Quote
+            var command = new CreateQuoteCommand
             {
                 Date = createQuoteDto.Date,
                 Location = createQuoteDto.Location,
                 PatientId = createQuoteDto.PatientId,
-                DoctorId = createQuoteDto.DoctorId,
-                Status = QuoteStatus.Pending
+                DoctorId = createQuoteDto.DoctorId
             };
 
-            await _quoteRepository.AddAsync(quote);
+            return await _mediator.Send(command);
         }
-
-        public async Task UpdateQuoteStatusAsync(int Id, UpdateQuoteStatusDto updateQuoteStatusDto)
+        public async Task UpdateQuoteStatusAsync(int id, UpdateQuoteStatusDto updateQuoteStatusDto)
         {
-            var quote = await _quoteRepository.GetByIdAsync(Id);
-            if (quote == null)
-            {
-                throw new ArgumentException("Quote not found");
-            }
-
-            if (Enum.TryParse(updateQuoteStatusDto.Status, out QuoteStatus status))
-            {
-                quote.Status = status;
-                await _quoteRepository.UpdateAsync(quote);
-
-                if (status == QuoteStatus.Completed)
-                {
-                    var createRecipeDto = new CreateRecipeDto
-                    {
-                        Code = updateQuoteStatusDto.Code,
-                        PatientId = quote.PatientId,
-                        Description = updateQuoteStatusDto.Description,
-                        ExpiryDate = updateQuoteStatusDto.ExpiryDate
-                    };
-                    var message = Newtonsoft.Json.JsonConvert.SerializeObject(createRecipeDto);
-                    _rabbitMQService.SendMessage(message);
-                }
-            }
-            else
-            {
+            if (!Enum.TryParse(updateQuoteStatusDto.Status, out QuoteStatus status))
                 throw new ArgumentException("Invalid status value");
-            }
-        }
 
-        public async Task<List<QuoteDto>> GetAllQuotesAsync()
-        {
-            var quotes = await _quoteRepository.GetAllAsync();
-            return quotes.Select(a => new QuoteDto
+            var command = new UpdateQuoteStatusCommand
             {
-                Id = a.Id,
-                Date = a.Date,
-                Location = a.Location,
-                PatientId = a.PatientId,
-                DoctorId = a.DoctorId,
-                Status = a.Status.ToString()
-            }).ToList();
-        }
-    }
+                Status = status.ToString(),
+                Code = updateQuoteStatusDto.Code,
+                Description = updateQuoteStatusDto.Description,
+                ExpiryDate= updateQuoteStatusDto.ExpiryDate
+            };
 
+            await _mediator.Send(command);
+        }
+
+        public async Task<IEnumerable<QuoteDto>> GetAllQuotesAsync()
+        {
+            var quotes = await _mediator.Send(new GetAllQuotesQuery());
+            return quotes.Select(ConvertToDto).ToList();
+        }
+
+        private static QuoteDto ConvertToDto(Quote quote)
+        {
+
+            return new QuoteDto
+            {
+                Id = quote.Id,
+                Date = quote.Date,
+                Location = quote.Location,
+                PatientId = quote.PatientId,
+                DoctorId = quote.DoctorId,
+                Status = ((QuoteStatus)quote.Status).ToString()
+            };
+        }
+
+    }
 }

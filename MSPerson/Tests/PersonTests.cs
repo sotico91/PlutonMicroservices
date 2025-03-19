@@ -9,12 +9,10 @@ namespace MSPerson.Tests
         [Fact]
         public void SetValidPersonType_ShouldAssignValue()
         {
-            var person = new Person();
-            var validPersonType = new PersonType();
+            var expectedPersonType = PersonType.Patient;
+            var person = Person.Create("Carla Andrade", "PP", "1555585", DateTime.Now, "84111", "carlaAndrade@example.com", expectedPersonType);
 
-            person.PersonType = validPersonType;
-
-            Assert.Equal(validPersonType, person.PersonType);
+            Assert.Equal(expectedPersonType, person.PersonType);
         }
-    }
+     }
 }

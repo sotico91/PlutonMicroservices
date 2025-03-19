@@ -6,6 +6,7 @@ using MSPerson.Application.interfaces;
 using MSPerson.Application.Queries;
 using MSPerson.Domain;
 using Xunit;
+using System;
 
 namespace MSPerson.Tests
 {
@@ -24,7 +25,7 @@ namespace MSPerson.Tests
         public async Task Handle_ShouldReturnPerson_WhenPersonExists()
         {
             var personId = 1;
-            var expectedPerson = new Person { Id = personId, Name = "Nestur Alvarez" };
+            var expectedPerson = Person.Create("Nestur Alvarez", "PS", "12345678", DateTime.Now, "1234567890", "email@example.com", PersonType.Patient);
 
             _repositoryMock
                 .Setup(repo => repo.GetByIdAsync(personId))

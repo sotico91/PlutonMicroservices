@@ -248,13 +248,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\Controllers\RecipesController.cs" />
+    <Compile Include="Application\Commands\CreateRecipeCommand.cs" />
+    <Compile Include="Application\Commands\DeleteRecipeCommand.cs" />
+    <Compile Include="Application\Commands\UpdateRecipeCommand.cs" />
     <Compile Include="Application\DTOs\CreateRecipeDto.cs" />
     <Compile Include="Application\DTOs\RecipeDto.cs" />
     <Compile Include="Application\DTOs\UpdateRecipeStatusDto.cs" />
+    <Compile Include="Application\Handlers\CreateRecipeHandler.cs" />
+    <Compile Include="Application\Handlers\DeleteRecipeHandler.cs" />
     <Compile Include="Application\Handlers\GetRecipeByCodeHandler.cs" />
+    <Compile Include="Application\Handlers\GetRecipesByPatientIdHandler.cs" />
+    <Compile Include="Application\Handlers\UpdateRecipeHandler.cs" />
     <Compile Include="Application\Interfaces\IRabbitMQService.cs" />
     <Compile Include="Application\Interfaces\IRecipeRepository.cs" />
     <Compile Include="Application\Interfaces\IRecipeService.cs" />
+    <Compile Include="Application\Queries\GetRecipesByPatientIdQuery.cs" />
     <Compile Include="Application\Queries\GetRecipeByCodeQuery.cs" />
     <Compile Include="Application\Services\RecipeService.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />

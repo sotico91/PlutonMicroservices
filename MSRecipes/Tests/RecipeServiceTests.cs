@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using MediatR;
 using Moq;
+using MSRecipes.Application.Commands;
 using MSRecipes.Application.DTOs;
-using MSRecipes.Application.Interfaces;
+using MSRecipes.Application.Queries;
 using MSRecipes.Application.Services;
 using MSRecipes.Domain;
 using Xunit;
@@ -12,17 +15,17 @@ namespace MSRecipes.Tests
 {
 	public class RecipeServiceTests
 	{
-        private readonly Mock<IRecipeRepository> _recipeRepositoryMock;
+        private readonly Mock<IMediator> _mediatorMock;
         private readonly RecipeService _recipeService;
 
         public RecipeServiceTests()
         {
-            _recipeRepositoryMock = new Mock<IRecipeRepository>();
-            _recipeService = new RecipeService(_recipeRepositoryMock.Object);
+            _mediatorMock = new Mock<IMediator>();
+            _recipeService = new RecipeService(_mediatorMock.Object);
         }
 
         [Fact]
-        public async Task CreateRecipeAsync_ShouldAddRecipe()
+        public async Task CreateRecipeAsync_ShouldSendCreateRecipeCommand()
         {
             var createRecipeDto = new CreateRecipeDto
             {
@@ -32,90 +35,65 @@ namespace MSRecipes.Tests
                 ExpiryDate = DateTime.UtcNow.AddDays(30)
             };
 
-            await _recipeService.CreateRecipeAsync(createRecipeDto);
+            _mediatorMock.Setup(m => m.Send(It.IsAny<CreateRecipeCommand>(), default)).ReturnsAsync(1);
 
-            _recipeRepositoryMock.Verify(r => r.AddAsync(It.IsAny<Recipe>()), Times.Once);
+            var result = await _recipeService.CreateRecipeAsync(createRecipeDto);
+
+            _mediatorMock.Verify(m => m.Send(It.IsAny<CreateRecipeCommand>(), default), Times.Once);
+            Assert.Equal(1, result);
         }
 
         [Fact]
-        public async Task UpdateRecipeStatusAsync_WhenRecipeExists_ShouldUpdateStatus()
+        public async Task UpdateRecipeStatusAsync_ShouldSendUpdateRecipeCommand()
         {
-            var recipe = new Recipe
-            {
-                Id = 1,
-                Code = "RCP123",
-                Status = RecipeStatus.Active
-            };
+            var updateDto = new UpdateRecipeStatusDto { Status = RecipeStatus.Expired.ToString() };
 
-            var updateDto = new UpdateRecipeStatusDto { Status = "Expired" };
-
-            _recipeRepositoryMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(recipe);
+            _mediatorMock.Setup(m => m.Send(It.IsAny<UpdateRecipeCommand>(), default)).ReturnsAsync(true);
 
             await _recipeService.UpdateRecipeStatusAsync(1, updateDto);
 
-            _recipeRepositoryMock.Verify(r => r.UpdateAsync(recipe), Times.Once);
-            Assert.Equal(RecipeStatus.Expired, recipe.Status);
+            _mediatorMock.Verify(m => m.Send(It.IsAny<UpdateRecipeCommand>(), default), Times.Once);
         }
 
         [Fact]
-        public async Task UpdateRecipeStatusAsync_WhenRecipeDoesNotExist_ShouldThrowException()
+        public async Task UpdateRecipeStatusAsync_WhenInvalidStatus_ShouldThrowException()
         {
-            _recipeRepositoryMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync((Recipe)null);
-
-            var updateDto = new UpdateRecipeStatusDto { Status = "Expired" };
+            var updateDto = new UpdateRecipeStatusDto { Status = "InvalidStatus" };
 
             await Assert.ThrowsAsync<ArgumentException>(async () =>
                 await _recipeService.UpdateRecipeStatusAsync(1, updateDto));
         }
 
         [Fact]
-        public async Task GetRecipeByCodeAsync_WhenRecipeExists_ReturnsRecipeDto()
+        public async Task GetRecipeByCodeAsync_ShouldSendGetRecipeByCodeQuery()
         {
-            var recipe = new Recipe
-            {
-                Id = 1,
-                Code = "RCP123",
-                PatientId = 1,
-                Description = "Test Recipe",
-                CreatedDate = DateTime.UtcNow,
-                ExpiryDate = DateTime.UtcNow.AddDays(30),
-                Status = RecipeStatus.Active
-            };
+            var recipeDto = new RecipeDto { Id = 1, Code = "RCP123", PatientId = 1 };
 
-            _recipeRepositoryMock.Setup(r => r.GetByCodeAsync("RCP123")).ReturnsAsync(recipe);
+            _mediatorMock.Setup(m => m.Send(It.IsAny<GetRecipeByCodeQuery>(), default)).ReturnsAsync(recipeDto);
 
             var result = await _recipeService.GetRecipeByCodeAsync("RCP123");
 
+            _mediatorMock.Verify(m => m.Send(It.IsAny<GetRecipeByCodeQuery>(), default), Times.Once);
             Assert.NotNull(result);
-            Assert.Equal(recipe.Id, result.Id);
-            Assert.Equal(recipe.Code, result.Code);
-            Assert.Equal(recipe.PatientId, result.PatientId);
+            Assert.Equal(recipeDto.Id, result.Id);
         }
 
         [Fact]
-        public async Task GetRecipeByCodeAsync_WhenRecipeDoesNotExist_ThrowsException()
+        public async Task GetRecipesByPatientIdAsync_ShouldSendGetRecipesByPatientIdQuery()
         {
-            _recipeRepositoryMock.Setup(r => r.GetByCodeAsync("NON_EXISTENT")).ReturnsAsync((Recipe)null);
-
-            await Assert.ThrowsAsync<ArgumentException>(async () =>
-                await _recipeService.GetRecipeByCodeAsync("NON_EXISTENT"));
-        }
-
-        [Fact]
-        public async Task GetRecipesByPatientIdAsync_WhenRecipesExist_ReturnsList()
-        {
-            var recipes = new List<Recipe>
+            var recipes = new List<RecipeDto>
             {
-                new Recipe { Id = 1, Code = "RCP1", PatientId = 1, Description = "Test 1", Status = RecipeStatus.Active },
-                new Recipe { Id = 2, Code = "RCP2", PatientId = 1, Description = "Test 2", Status = RecipeStatus.Delivered }
+                new RecipeDto { Id = 1, Code = "RCP1", PatientId = 1 },
+                new RecipeDto { Id = 2, Code = "RCP2", PatientId = 1 }
             };
 
-            _recipeRepositoryMock.Setup(r => r.GetByPatientIdAsync(1)).ReturnsAsync(recipes);
+            _mediatorMock.Setup(m => m.Send(It.IsAny<GetRecipesByPatientIdQuery>(), default)).ReturnsAsync(recipes);
 
             var result = await _recipeService.GetRecipesByPatientIdAsync(1);
 
+            _mediatorMock.Verify(m => m.Send(It.IsAny<GetRecipesByPatientIdQuery>(), default), Times.Once);
             Assert.NotNull(result);
-            Assert.Equal(2, result.Count);
+            Assert.Equal(recipes.Count, result.Count());
         }
     }
 }

@@ -17,26 +17,42 @@ namespace MSPerson.Domain
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
 
-        private PersonType _personType;
+        public PersonType PersonType { get; private set; }
 
-        private readonly PersonTypeSpecification _personTypeSpecification;
-
-        public Person()
+        private Person(string name, string documentType, string documentNumber, DateTime dateOfBirth,
+                   string phoneNumber, string email, PersonType personType)
         {
-            _personTypeSpecification = new PersonTypeSpecification();
+            Name = name;
+            DocumentType = documentType;
+            DocumentNumber = documentNumber;
+            DateOfBirth = dateOfBirth;
+            PhoneNumber = phoneNumber;
+            Email = email;
+            PersonType = personType;
         }
 
-        public PersonType PersonType
+        private Person() { }
+
+        public static Person Create(string name, string documentType, string documentNumber, DateTime dateOfBirth,
+                                    string phoneNumber, string email, PersonType personType)
         {
-            get => _personType;
-            set
-            {
-                if (!_personTypeSpecification.IsSatisfiedBy(value))
-                {
-                    throw new ArgumentException("Invalid value for PersonType");
-                }
-                _personType = value;
-            }
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Name is required");
+            if (string.IsNullOrWhiteSpace(documentNumber))
+                throw new ArgumentException("The document number is required");
+
+            return new Person(name, documentType, documentNumber, dateOfBirth, phoneNumber, email, personType);
+        }
+        public void Update(string name, string documentType, string documentNumber, DateTime dateOfBirth,
+                        string phoneNumber, string email, PersonType personType)
+        {
+            Name = name;
+            DocumentType = documentType;
+            DocumentNumber = documentNumber;
+            DateOfBirth = dateOfBirth;
+            PhoneNumber = phoneNumber;
+            Email = email;
+            PersonType = personType;
         }
     }
 }

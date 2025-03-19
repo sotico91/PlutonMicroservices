@@ -6,9 +6,9 @@ namespace MSRecipes.Application.Interfaces
 {
     public interface IRecipeService
     {
-        Task CreateRecipeAsync(CreateRecipeDto createRecipeDto);
-        Task UpdateRecipeStatusAsync(int Id, UpdateRecipeStatusDto updateRecipeStatusDto);
+        Task<int> CreateRecipeAsync(CreateRecipeDto createRecipeDto);
+        Task UpdateRecipeStatusAsync(int id, UpdateRecipeStatusDto updateRecipeStatusDto);
         Task<RecipeDto> GetRecipeByCodeAsync(string code);
-        Task<List<RecipeDto>> GetRecipesByPatientIdAsync(int patientId);
+        Task<IEnumerable<RecipeDto>> GetRecipesByPatientIdAsync(int patientId);
     }
 }

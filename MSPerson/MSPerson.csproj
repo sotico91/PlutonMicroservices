@@ -245,17 +245,26 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\Controllers\PeopleController.cs" />
+    <Compile Include="Application\Commands\CreatePersonCommand.cs" />
+    <Compile Include="Application\Commands\DeletePersonCommand.cs" />
+    <Compile Include="Application\Commands\UpdatePersonCommand.cs" />
+    <Compile Include="Application\Handlers\UpdatePersonCommandHandler.cs" />
     <Compile Include="Application\DTOs\CreatePersonDto.cs" />
     <Compile Include="Application\DTOs\PersonDto.cs" />
     <Compile Include="Application\DTOs\UpdatePersonDto.cs" />
+    <Compile Include="Application\Handlers\CreatePersonCommandHandler.cs" />
+    <Compile Include="Application\Handlers\DeletePersonCommandHandler.cs" />
     <Compile Include="Application\Handlers\GetPersonByIdHandler.cs" />
+    <Compile Include="Application\Handlers\GetPersonByIdQueryHandler.cs" />
     <Compile Include="Application\Interfaces\IPersonRepository.cs" />
     <Compile Include="Application\Interfaces\IPersonService.cs" />
+    <Compile Include="Application\Queries\GetAllPersonsQuery.cs" />
     <Compile Include="Application\Queries\GetPersonByIdQuery.cs" />
     <Compile Include="Application\Services\PersonService.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Domain\Factories\PersonFactory.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />

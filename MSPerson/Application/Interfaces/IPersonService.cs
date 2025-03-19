@@ -7,10 +7,10 @@ namespace MSPerson.Application.Interfaces
 {
     public interface IPersonService
     {
+        Task<int> CreatePerson(CreatePersonDto createPersonDto);
         Task<List<PersonDto>> GetAllPersons();
-        Task CreatePerson(CreatePersonDto createPersonDto);
+        Task<PersonDto> GetPersonById(int id);
         Task UpdatePersonAsync(int id, UpdatePersonDto updatePersonDto);
         Task DeletePersonAsync(int id);
-        PersonDto ConvertToDto(Person person);
     }
 }

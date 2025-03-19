@@ -2,24 +2,87 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MediatR;
+using MSPerson.Application.Commands;
 using MSPerson.Application.DTOs;
-using MSPerson.Application.interfaces;
 using MSPerson.Application.Interfaces;
+using MSPerson.Application.Queries;
 using MSPerson.Domain;
+using MSPerson.Domain.Factories;
 
 namespace MSPerson.Application.Services
 {
     public class PersonService : IPersonService
     {
 
-        private readonly IPersonRepository _personRepository;
+        private readonly IMediator _mediator;
 
-        public PersonService(IPersonRepository personRepository)
+        public PersonService(IMediator mediator)
         {
-            _personRepository = personRepository;
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        public PersonDto ConvertToDto(Person person)
+        public async Task<int> CreatePerson(CreatePersonDto createPersonDto)
+        {
+
+            if (createPersonDto == null)
+                throw new ArgumentNullException(nameof(createPersonDto));
+
+            if (!Enum.TryParse(createPersonDto.PersonType, out PersonType personType))
+                throw new ArgumentException("Invalid PersonType value");
+
+            var command = new CreatePersonCommand
+            {
+                Name = createPersonDto.Name,
+                DocumentType = createPersonDto.DocumentType,
+                DocumentNumber = createPersonDto.DocumentNumber,
+                DateOfBirth = createPersonDto.DateOfBirth,
+                PhoneNumber = createPersonDto.PhoneNumber,
+                Email = createPersonDto.Email,
+                PersonType = personType
+            };
+
+            return await _mediator.Send(command);
+        }
+
+        public async Task<List<PersonDto>> GetAllPersons()
+        {
+            var persons = await _mediator.Send(new GetAllPersonsQuery());
+            return persons.Select(ConvertToDto).ToList();
+        }
+
+        public async Task<PersonDto> GetPersonById(int id)
+        {
+            var person = await _mediator.Send(new GetPersonByIdQuery(id));
+            return person != null ? ConvertToDto(person) : null;
+        }
+
+        public async Task UpdatePersonAsync(int id, UpdatePersonDto updatePersonDto)
+        {
+            if (!Enum.TryParse(updatePersonDto.PersonType, out PersonType personType))
+                throw new ArgumentException("Invalid PersonType value");
+
+            var command = new UpdatePersonCommand
+            {
+                Id = id,
+                Name = updatePersonDto.Name,
+                DocumentType = updatePersonDto.DocumentType,
+                DocumentNumber = updatePersonDto.DocumentNumber,
+                DateOfBirth = updatePersonDto.DateOfBirth,
+                PhoneNumber = updatePersonDto.PhoneNumber,
+                Email = updatePersonDto.Email,
+                PersonType = personType
+            };
+
+            await _mediator.Send(command);
+        }
+
+        public async Task DeletePersonAsync(int id)
+        {
+            await _mediator.Send(new DeletePersonCommand(id));
+        }
+
+        private static PersonDto ConvertToDto(Person person)
         {
             return new PersonDto
             {
@@ -31,72 +94,7 @@ namespace MSPerson.Application.Services
                 PhoneNumber = person.PhoneNumber,
                 Email = person.Email,
                 PersonType = person.PersonType.ToString()
-
             };
-        }
-
-        public async Task CreatePerson(CreatePersonDto createPersonDto)
-        {
-            if (Enum.TryParse(createPersonDto.PersonType, out PersonType personType))
-            {
-                var person = new Person
-                {
-                    Name = createPersonDto.Name,
-                    DocumentType = createPersonDto.DocumentType,
-                    DocumentNumber = createPersonDto.DocumentNumber,
-                    DateOfBirth = createPersonDto.DateOfBirth,
-                    PhoneNumber = createPersonDto.PhoneNumber,
-                    Email = createPersonDto.Email,
-                    PersonType = personType
-                };
-
-                await _personRepository.AddAsync(person);
-            }
-            else
-            {
-                throw new ArgumentException("Invalid PersonType value");
-            }
-        }
-
-        public async Task<List<PersonDto>> GetAllPersons()
-        {
-            var persons = await _personRepository.GetAllAsync();
-            return persons.Select(ConvertToDto).ToList();
-        }
-
-        public async Task UpdatePersonAsync(int Id, UpdatePersonDto updatePersonDto)
-        {
-            var person = await _personRepository.GetByIdAsync(Id);
-            if (person == null)
-            {
-                throw new ArgumentException("Person not found");
-            }
-
-            person.Name = updatePersonDto.Name ?? person.Name;
-            person.DocumentType = updatePersonDto.DocumentType ?? person.DocumentType;
-            person.DocumentNumber = updatePersonDto.DocumentNumber ?? person.DocumentNumber;
-            person.DateOfBirth = updatePersonDto.DateOfBirth != default ? updatePersonDto.DateOfBirth : person.DateOfBirth;
-            person.PhoneNumber = updatePersonDto.PhoneNumber ?? person.PhoneNumber;
-            person.Email = updatePersonDto.Email ?? person.Email;
-
-            if (!string.IsNullOrEmpty(updatePersonDto.PersonType))
-            {
-                if (Enum.TryParse<PersonType>(updatePersonDto.PersonType, out PersonType personType) && person.PersonType != personType)
-                {
-                    person.PersonType = personType;
-                }
-                else if (!Enum.TryParse<PersonType>(updatePersonDto.PersonType, out _))
-                {
-                    throw new ArgumentException("Invalid PersonType value");
-                }
-            }
-
-            await _personRepository.UpdateAsync(person);
-        }
-
-        public async Task DeletePersonAsync(int id)
-        {
-            await _personRepository.DeleteAsync(id);
         }
     }
 }

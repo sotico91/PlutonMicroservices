@@ -10,6 +10,8 @@ using MSRecipes.Infrastructure.repositories.Data;
 using System.Threading.Tasks;
 using Autofac.Core;
 using System;
+using MediatR;
+using MSRecipes.Application.Handlers;
 
 namespace MSRecipes
 {
@@ -21,11 +23,11 @@ namespace MSRecipes
 
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
 
-            // REGISTRA PRIMERO RECIPEDBCONTEXT
+            // REGISTRA RecipeDbContext
             builder.RegisterType<RecipeDbContext>()
                 .InstancePerLifetimeScope();
 
-            // REGISTRA REPOSITORIO Y SERVICE
+            // REGISTRA REPOSITORIO Y SERVICIO
             builder.RegisterType<RecipeRepository>()
                 .As<IRecipeRepository>()
                 .InstancePerLifetimeScope();
@@ -34,7 +36,20 @@ namespace MSRecipes
                 .As<IRecipeService>()
                 .InstancePerLifetimeScope();
 
-            // REGISTRA RABBITMQ CON INYECCIÓN DE RECIPE SERVICE
+            // REGISTRA MEDIATR Y HANDLERS
+            builder.RegisterType<Mediator>().As<IMediator>().InstancePerLifetimeScope();
+
+            builder.Register<ServiceFactory>(ctx =>
+            {
+                var c = ctx.Resolve<IComponentContext>();
+                return t => c.Resolve(t);
+            });
+
+            builder.RegisterAssemblyTypes(typeof(CreateRecipeHandler).Assembly)
+                   .AsClosedTypesOf(typeof(IRequestHandler<,>))
+                   .InstancePerLifetimeScope();
+
+            // REGISTRA RabbitMQ CON INYECCIÓN DE RecipeService
             builder.RegisterType<RabbitMQService>()
                 .As<IRabbitMQService>()
                 .WithParameter("hostname", "localhost")
@@ -49,20 +64,25 @@ namespace MSRecipes
             GlobalConfiguration.Configuration.DependencyResolver = new AutofacWebApiDependencyResolver(container);
             GlobalConfiguration.Configure(WebApiConfig.Register);
 
-            // INICIAR RABBITMQ EN HILO SEPARADO
+            // INICIAR RabbitMQ EN HILO SEGURO
             var rabbitMQService = container.Resolve<IRabbitMQService>();
 
-            Task.Run(() =>
+            Task.Run(async () =>
             {
-                try
+                while (true)
                 {
-                    System.Diagnostics.Debug.WriteLine("🔹 Iniciando hilo de RabbitMQ en {DateTime.Now}");
-                    rabbitMQService.StartListening();
-                    System.Diagnostics.Debug.WriteLine($"✅ Consumidor de RabbitMQ activo en {DateTime.Now}");
-                }
-                catch (Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine($"❌ Error en el hilo de RabbitMQ: {ex.Message}");
+                    try
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Iniciando RabbitMQ en {DateTime.Now}");
+                        rabbitMQService.StartListening();
+                        System.Diagnostics.Debug.WriteLine($"RabbitMQ activo en {DateTime.Now}");
+                        break;
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Error en RabbitMQ: {ex.Message}. Reintentando en 5s...");
+                        await Task.Delay(5000);
+                    }
                 }
             });
         }

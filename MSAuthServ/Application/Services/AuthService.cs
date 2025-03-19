@@ -35,7 +35,7 @@ namespace MSAuthServ.Application.Services
             // Generar el token JWT
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.UTF8.GetBytes(_secretKey);
-            var audiences = _audience.Split(','); // Separar múltiples audiencias
+            var audiences = _audience.Split(',');
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[]
@@ -43,9 +43,9 @@ namespace MSAuthServ.Application.Services
                     new Claim(ClaimTypes.Name, user.Username),
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
                  }),
-                Expires = DateTime.UtcNow.AddMinutes(5),
+                Expires = DateTime.UtcNow.AddMinutes(20),
                 Issuer = _issuer,
-                Audience = audiences[0], // Se usa la primera audiencia (JWT no admite varias audiencias directamente)
+                Audience = audiences[0],
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 

@@ -1,105 +1,12 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\edgar-david.velasco\\source\\repos\\PlutonMicroservices\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{AC3AAF20-6FB7-417C-A15D-86266ECAF381}|MSQuotes\\MSQuotes.csproj|c:\\users\\edgar-david.velasco\\source\\repos\\plutonmicroservices\\msquotes\\api\\controllers\\quotescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AC3AAF20-6FB7-417C-A15D-86266ECAF381}|MSQuotes\\MSQuotes.csproj|solutionrelative:msquotes\\api\\controllers\\quotescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{AC3AAF20-6FB7-417C-A15D-86266ECAF381}|MSQuotes\\MSQuotes.csproj|c:\\users\\edgar-david.velasco\\source\\repos\\plutonmicroservices\\msquotes\\application\\services\\quoteservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AC3AAF20-6FB7-417C-A15D-86266ECAF381}|MSQuotes\\MSQuotes.csproj|solutionrelative:msquotes\\application\\services\\quoteservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{AC3AAF20-6FB7-417C-A15D-86266ECAF381}|MSQuotes\\MSQuotes.csproj|c:\\users\\edgar-david.velasco\\source\\repos\\plutonmicroservices\\msquotes\\application\\dtos\\quotedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AC3AAF20-6FB7-417C-A15D-86266ECAF381}|MSQuotes\\MSQuotes.csproj|solutionrelative:msquotes\\application\\dtos\\quotedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{AC3AAF20-6FB7-417C-A15D-86266ECAF381}|MSQuotes\\MSQuotes.csproj|c:\\users\\edgar-david.velasco\\source\\repos\\plutonmicroservices\\msquotes\\domain\\quote.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AC3AAF20-6FB7-417C-A15D-86266ECAF381}|MSQuotes\\MSQuotes.csproj|solutionrelative:msquotes\\domain\\quote.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{AC3AAF20-6FB7-417C-A15D-86266ECAF381}|MSQuotes\\MSQuotes.csproj|c:\\users\\edgar-david.velasco\\source\\repos\\plutonmicroservices\\msquotes\\application\\dtos\\updatequotestatusdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AC3AAF20-6FB7-417C-A15D-86266ECAF381}|MSQuotes\\MSQuotes.csproj|solutionrelative:msquotes\\application\\dtos\\updatequotestatusdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    }
-  ],
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": [
-        {
-          "DockedWidth": 200,
-          "SelectedChildIndex": 2,
-          "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "QuoteDto.cs",
-              "DocumentMoniker": "C:\\Users\\edgar-david.velasco\\source\\repos\\PlutonMicroservices\\MSQuotes\\Application\\DTOs\\QuoteDto.cs",
-              "RelativeDocumentMoniker": "MSQuotes\\Application\\DTOs\\QuoteDto.cs",
-              "ToolTip": "C:\\Users\\edgar-david.velasco\\source\\repos\\PlutonMicroservices\\MSQuotes\\Application\\DTOs\\QuoteDto.cs",
-              "RelativeToolTip": "MSQuotes\\Application\\DTOs\\QuoteDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-19T21:42:02.488Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Quote.cs",
-              "DocumentMoniker": "C:\\Users\\edgar-david.velasco\\source\\repos\\PlutonMicroservices\\MSQuotes\\Domain\\Quote.cs",
-              "RelativeDocumentMoniker": "MSQuotes\\Domain\\Quote.cs",
-              "ToolTip": "C:\\Users\\edgar-david.velasco\\source\\repos\\PlutonMicroservices\\MSQuotes\\Domain\\Quote.cs",
-              "RelativeToolTip": "MSQuotes\\Domain\\Quote.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-19T21:41:41.859Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "QuotesController.cs",
-              "DocumentMoniker": "C:\\Users\\edgar-david.velasco\\source\\repos\\PlutonMicroservices\\MSQuotes\\API\\Controllers\\QuotesController.cs",
-              "RelativeDocumentMoniker": "MSQuotes\\API\\Controllers\\QuotesController.cs",
-              "ToolTip": "C:\\Users\\edgar-david.velasco\\source\\repos\\PlutonMicroservices\\MSQuotes\\API\\Controllers\\QuotesController.cs",
-              "RelativeToolTip": "MSQuotes\\API\\Controllers\\QuotesController.cs",
-              "ViewState": "AgIAAEgAAAAAAAAAAAAYwGoAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-19T21:39:40.966Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "UpdateQuoteStatusDto.cs",
-              "DocumentMoniker": "C:\\Users\\edgar-david.velasco\\source\\repos\\PlutonMicroservices\\MSQuotes\\Application\\DTOs\\UpdateQuoteStatusDto.cs",
-              "RelativeDocumentMoniker": "MSQuotes\\Application\\DTOs\\UpdateQuoteStatusDto.cs",
-              "ToolTip": "C:\\Users\\edgar-david.velasco\\source\\repos\\PlutonMicroservices\\MSQuotes\\Application\\DTOs\\UpdateQuoteStatusDto.cs",
-              "RelativeToolTip": "MSQuotes\\Application\\DTOs\\UpdateQuoteStatusDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-19T21:29:34.315Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "QuoteService.cs",
-              "DocumentMoniker": "C:\\Users\\edgar-david.velasco\\source\\repos\\PlutonMicroservices\\MSQuotes\\Application\\Services\\QuoteService.cs",
-              "RelativeDocumentMoniker": "MSQuotes\\Application\\Services\\QuoteService.cs",
-              "ToolTip": "C:\\Users\\edgar-david.velasco\\source\\repos\\PlutonMicroservices\\MSQuotes\\Application\\Services\\QuoteService.cs",
-              "RelativeToolTip": "MSQuotes\\Application\\Services\\QuoteService.cs",
-              "ViewState": "AgIAABsAAAAAAAAAAAAAACUAAAArAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-19T21:28:30.704Z",
-              "EditorCaption": ""
-            }
-          ]
-        }
-      ]
+      "DocumentGroups": []
     }
   ]
 }

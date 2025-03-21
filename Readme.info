@@ -1,0 +1,83 @@
+﻿PLUTON MICROSERVICES 
+
+Este proyecto inbnvolucra microservicios desarrollados en .NET Framework 4.8 utilizando la arquitectura hexagonal y el patrón CQRS. Se conecta a una base de datos SQL Server y expone endpoints para su consumo mediante API REST.
+
+📌 Prerrequisitos
+
+Antes de iniciar con la instalación y ejecución del proyecto, asegúrate de tener las siguientes herramientas instaladas en tu equipo:
+
+Visual Studio 2019 o superior (con soporte para .NET Framework 4.8)
+
+SQL Server 2019 o superior (o bien, SQL Server Express)
+
+SQL Server Management Studio (SSMS) (opcional, para administrar la base de datos)
+
+Postman (para realizar pruebas a la API)
+
+Internet Information Services (IIS) (para desplegar el servicio)
+
+Git (para clonar el repositorio)
+
+📥 Instalación
+
+Clonar el repositorio
+
+git clone https://github.com/sotico91/PlutonMicroservices
+cd PlutonMicroservices
+
+Abre Visual Studio.
+
+Selecciona "Abrir un proyecto o solución" y carga el archivo .sln del repositorio clonado.
+
+Restaurar paquetes NuGet
+
+En Visual Studio, abre la Consola del Administrador de PaquetesNuget y ejecuta:
+
+Update-Package -Reinstall
+
+Configurar la cadena de conexión y ejecutar migraciones de base de datos
+
+En Visual Studio, abre la Consola del Administrador de Paquetes y ejecuta:
+
+Update-Database -Context AuthDbContext
+Update-Database -Context PeopleDbContext
+Update-Database -Context QuoteDbContext
+Update-Database -Context RecipeDbContext
+
+Esto aplicará las migraciones y creará las tablas necesarias sin necesidad de ejecutar scripts manualmente.
+
+Compilar y ejecutar el proyecto
+
+En Visual Studio, presiona Ctrl + F5 o selecciona Iniciar para ejecutar la API localmente
+
+Abre SQL Server Management Studio (SSMS) y valida que se hubiesen creado las diferentes bases de datos con sus respectivas tablas y datos, para este paso
+se debe garantizar que se tenga conexion a sql server.
+
+Nota: En caso de que no se logra migrar la info hacia la base de datos, se adjunta script para ejecutar en la base de datos (4 BDS) donde se crean las tablas y se insertan los datos.
+
+El script queda en la ruta /PlutonMicroservices/Scripts/ScriptIni.sql
+
+Compilar y ejecutar el proyecto
+
+En Visual Studio, presiona Ctrl + F5 o selecciona Iniciar para ejecutar la API localmente.
+
+Despliegue en IIS
+
+Publicar el proyecto
+
+En Visual Studio, selecciona Compilar → Publicar....
+
+Selecciona la opcion de iniciar, opcion que se encuentra abajo del menu de herramientas de visual studio.
+
+Probar la API
+
+Importa la colección de Postman que se encuentra dentro del proyecto github, en la ruta /PlutonMicroservices/RestApiPluton.postman_collection.json
+
+Consideraciones Adicionales
+
+Si utilizas un firewall, asegúrate de permitir el puerto en el que corre el servicio.
+
+Verifica que SQL Server permita conexiones remotas si deseas conectarte desde otra máquina.
+
+Si IIS no reconoce la aplicación, revisa que .NET Framework 4.8 esté correctamente habilitado en Windows.
+

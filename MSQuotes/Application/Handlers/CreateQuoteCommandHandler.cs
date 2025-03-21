@@ -3,32 +3,21 @@ using System.Threading;
 using MediatR;
 using MSQuotes.Application.Commands;
 using MSQuotes.Application.Interfaces;
-using MSQuotes.Domain;
 
 namespace MSQuotes.Application.Handlers
 {
     public class CreateQuoteCommandHandler : IRequestHandler<CreateQuoteCommand, int>
     {
-        private readonly IQuoteRepository _quoteRepository;
+        private readonly IQuoteService _quoteService;
 
-        public CreateQuoteCommandHandler(IQuoteRepository quoteRepository)
+        public CreateQuoteCommandHandler(IQuoteService quoteService)
         {
-            _quoteRepository = quoteRepository;
+            _quoteService = quoteService;
         }
 
         public async Task<int> Handle(CreateQuoteCommand request, CancellationToken cancellationToken)
         {
-            var quote = new Quote
-            {
-                Date = request.Date,
-                Location = request.Location,
-                PatientId = request.PatientId,
-                DoctorId = request.DoctorId,
-                Status = QuoteStatus.Pending
-            };
-
-            await _quoteRepository.AddAsync(quote);
-            return quote.Id;
+            return await _quoteService.CreateQuoteAsync(request);
         }
     }
 }

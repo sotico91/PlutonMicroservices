@@ -7,28 +7,25 @@ using Moq;
 using MSQuotes.Application.Commands;
 using MSQuotes.Application.DTOs;
 using MSQuotes.Application.Interfaces;
-using MSQuotes.Application.Queries;
-using MSQuotes.Application.Services;
-using MSQuotes.Domain;
 using Xunit;
 
 namespace MSQuotes.Tests
 {
 	public class IQuoteServiceTests
 	{
-        private readonly Mock<IMediator> _mockMediator;
-        private readonly QuoteService _quoteService;
+        private readonly Mock<IQuoteService> _mockQuoteService;
+        private readonly IQuoteService _quoteService;
 
         public IQuoteServiceTests()
         {
-            _mockMediator = new Mock<IMediator>();
-            _quoteService = new QuoteService(_mockMediator.Object);
+            _mockQuoteService = new Mock<IQuoteService>();
+            _quoteService = _mockQuoteService.Object;
         }
 
         [Fact]
-        public async Task CreateQuoteAsync_ShouldSendCreateCommand()
+        public async Task CreateQuoteAsync_ShouldCallServiceMethod()
         {
-            var createQuoteDto = new CreateQuoteDto
+            var createCommand = new CreateQuoteCommand
             {
                 Date = DateTime.Now,
                 Location = "Location A",
@@ -36,53 +33,45 @@ namespace MSQuotes.Tests
                 DoctorId = 2
             };
 
-            _mockMediator.Setup(m => m.Send(It.IsAny<CreateQuoteCommand>(), default))
+            _mockQuoteService.Setup(service => service.CreateQuoteAsync(createCommand))
                 .ReturnsAsync(1);
 
-            var result = await _quoteService.CreateQuoteAsync(createQuoteDto);
+            var result = await _quoteService.CreateQuoteAsync(createCommand);
 
-            _mockMediator.Verify(m => m.Send(It.IsAny<CreateQuoteCommand>(), default), Times.Once);
+            _mockQuoteService.Verify(service => service.CreateQuoteAsync(createCommand), Times.Once);
             Assert.Equal(1, result);
         }
 
         [Fact]
-        public async Task UpdateQuoteStatusAsync_ShouldSendUpdateStatusCommand()
+        public async Task UpdateQuoteStatusAsync_ShouldCallServiceMethod()
         {
-            var updateDto = new UpdateQuoteStatusDto
+            var updateCommand = new UpdateQuoteStatusCommand
             {
-                Status = "Completed",
+                Id = 1,
                 Code = "12345",
                 Description = "Test Description",
-                ExpiryDate = DateTime.Now.AddDays(7)
+                ExpiryDate = DateTime.Now.AddDays(7),
+                Status = "Completed"
             };
 
-            _mockMediator.Setup(m => m.Send(It.IsAny<UpdateQuoteStatusCommand>(), default))
-                .ReturnsAsync(true);
+            _mockQuoteService.Setup(service => service.UpdateQuoteStatusAsync(updateCommand))
+                .Returns(Task.CompletedTask);
 
-            await _quoteService.UpdateQuoteStatusAsync(1, updateDto);
+            await _quoteService.UpdateQuoteStatusAsync(updateCommand);
 
-            _mockMediator.Verify(m => m.Send(It.IsAny<UpdateQuoteStatusCommand>(), default), Times.Once);
-        }
-
-        [Fact]
-        public async Task UpdateQuoteStatusAsync_ShouldThrowExceptionForInvalidStatus()
-        {
-            var updateDto = new UpdateQuoteStatusDto { Status = "InvalidStatus" };
-
-            await Assert.ThrowsAsync<ArgumentException>(async () =>
-                await _quoteService.UpdateQuoteStatusAsync(1, updateDto));
+            _mockQuoteService.Verify(service => service.UpdateQuoteStatusAsync(updateCommand), Times.Once);
         }
 
         [Fact]
         public async Task GetAllQuotesAsync_ShouldReturnMappedQuotes()
         {
-            var quotes = new List<Quote>
+            var quotes = new List<QuoteDto>
             {
-                new Quote { Id = 1, Status = QuoteStatus.Pending },
-                new Quote { Id = 2, Status = QuoteStatus.Completed }
+                new QuoteDto { Id = 1, Status = "Pending" },
+                new QuoteDto { Id = 2, Status = "Completed" }
             };
 
-            _mockMediator.Setup(m => m.Send(It.IsAny<GetAllQuotesQuery>(), default))
+            _mockQuoteService.Setup(service => service.GetAllQuotesAsync())
                 .ReturnsAsync(quotes);
 
             var result = await _quoteService.GetAllQuotesAsync();

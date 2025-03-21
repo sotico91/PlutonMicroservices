@@ -28,6 +28,8 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <RunSettingsFilePath>
+    </RunSettingsFilePath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -249,13 +251,11 @@
   <ItemGroup>
     <Compile Include="API\Controllers\RecipesController.cs" />
     <Compile Include="Application\Commands\CreateRecipeCommand.cs" />
-    <Compile Include="Application\Commands\DeleteRecipeCommand.cs" />
     <Compile Include="Application\Commands\UpdateRecipeCommand.cs" />
     <Compile Include="Application\DTOs\CreateRecipeDto.cs" />
     <Compile Include="Application\DTOs\RecipeDto.cs" />
     <Compile Include="Application\DTOs\UpdateRecipeStatusDto.cs" />
     <Compile Include="Application\Handlers\CreateRecipeHandler.cs" />
-    <Compile Include="Application\Handlers\DeleteRecipeHandler.cs" />
     <Compile Include="Application\Handlers\GetRecipeByCodeHandler.cs" />
     <Compile Include="Application\Handlers\GetRecipesByPatientIdHandler.cs" />
     <Compile Include="Application\Handlers\UpdateRecipeHandler.cs" />

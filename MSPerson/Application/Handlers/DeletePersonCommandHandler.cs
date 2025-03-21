@@ -2,22 +2,22 @@
 using System.Threading;
 using MediatR;
 using MSPerson.Application.Commands;
-using MSPerson.Application.interfaces;
+using MSPerson.Application.Interfaces;
 
 namespace MSPerson.Application.Handlers
 {
     public class DeletePersonCommandHandler : IRequestHandler<DeletePersonCommand, bool>
     {
-        private readonly IPersonRepository _personRepository;
+        private readonly IPersonService _personService;
 
-        public DeletePersonCommandHandler(IPersonRepository personRepository)
+        public DeletePersonCommandHandler(IPersonService personService)
         {
-            _personRepository = personRepository;
+            _personService = personService;
         }
 
         public async Task<bool> Handle(DeletePersonCommand request, CancellationToken cancellationToken)
         {
-            await _personRepository.DeleteAsync(request.Id);
+            await _personService.DeletePersonAsync(request.Id);
             return true;
         }
     }

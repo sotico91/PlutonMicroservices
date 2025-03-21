@@ -2,59 +2,75 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MediatR;
 using MSRecipes.Application.Commands;
 using MSRecipes.Application.DTOs;
 using MSRecipes.Application.Interfaces;
-using MSRecipes.Application.Queries;
 using MSRecipes.Domain;
 
 namespace MSRecipes.Application.Services
 {
     public class RecipeService : IRecipeService
     {
-        private readonly IMediator _mediator;
+        private readonly IRecipeRepository _repository;
 
-        public RecipeService(IMediator mediator)
+        public RecipeService(IRecipeRepository repository)
         {
-            _mediator = mediator;
+            _repository = repository;
         }
 
-        public async Task<int> CreateRecipeAsync(CreateRecipeDto createRecipeDto)
+        public async Task<int> CreateRecipeAsync(CreateRecipeCommand createRecipeCommand)
         {
-            var command = new CreateRecipeCommand
+            var recipe = new Recipe
             {
-                Code = createRecipeDto.Code,
-                PatientId = createRecipeDto.PatientId,
-                Description = createRecipeDto.Description,
-                ExpiryDate = createRecipeDto.ExpiryDate
+                Code = createRecipeCommand.Code,
+                PatientId = createRecipeCommand.PatientId,
+                Description = createRecipeCommand.Description,
+                CreatedDate = DateTime.UtcNow,
+                ExpiryDate = createRecipeCommand.ExpiryDate,
+                Status = RecipeStatus.Active
             };
 
-            return await _mediator.Send(command);
+            await _repository.AddAsync(recipe);
+            return recipe.Id;
         }
 
-        public async Task UpdateRecipeStatusAsync(int id, UpdateRecipeStatusDto updateRecipeStatusDto)
+        public async Task UpdateRecipeStatusAsync(UpdateRecipeCommand updateRecipeCommand)
         {
-            if (!Enum.TryParse(updateRecipeStatusDto.Status, out RecipeStatus status))
+            if (!Enum.TryParse(updateRecipeCommand.Status, out RecipeStatus status))
                 throw new ArgumentException("Invalid status value");
 
-            var command = new UpdateRecipeCommand
-            {
-                Id = id,
-                Status = status.ToString()
-            };
+            var recipe = await _repository.GetByIdAsync(updateRecipeCommand.Id);
+            if (recipe == null)
+                throw new KeyNotFoundException("Recipe not found");
 
-            await _mediator.Send(command);
+            recipe.Status = status;
+            await _repository.UpdateAsync(recipe);
         }
 
         public async Task<RecipeDto> GetRecipeByCodeAsync(string code)
         {
-            return await _mediator.Send(new GetRecipeByCodeQuery(code));
+            var recipe = await _repository.GetByCodeAsync(code);
+            return recipe == null ? null : ConvertToDto(recipe);
         }
 
         public async Task<IEnumerable<RecipeDto>> GetRecipesByPatientIdAsync(int patientId)
         {
-            return await _mediator.Send(new GetRecipesByPatientIdQuery(patientId));
+            var recipes = await _repository.GetByPatientIdAsync(patientId);
+            return recipes.Select(r => ConvertToDto(r));
+        }
+
+    private static RecipeDto ConvertToDto(Recipe recipe)
+        {
+            return new RecipeDto
+            {
+                Id = recipe.Id,
+                Code = recipe.Code,
+                PatientId = recipe.PatientId,
+                Description = recipe.Description,
+                CreatedDate = recipe.CreatedDate,
+                ExpiryDate = recipe.ExpiryDate,
+                Status = recipe.Status.ToString()
+            };
         }
     }
 }

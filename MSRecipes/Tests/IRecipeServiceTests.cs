@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Moq;
+using MSRecipes.Application.Commands;
 using MSRecipes.Application.DTOs;
 using MSRecipes.Application.Interfaces;
 using Xunit;
@@ -17,9 +19,10 @@ namespace MSRecipes.Tests
         }
 
         [Fact]
-        public async Task CreateRecipeAsync_ShouldCallMethodOnce()
+        public async Task CreateRecipeAsync_ShouldReturnRecipeId()
         {
-            var createRecipeDto = new CreateRecipeDto
+  
+            var createRecipeCommand = new CreateRecipeCommand
             {
                 Code = "RCP001",
                 PatientId = 1,
@@ -27,24 +30,37 @@ namespace MSRecipes.Tests
                 ExpiryDate = System.DateTime.Now.AddDays(30)
             };
 
-            await _recipeServiceMock.Object.CreateRecipeAsync(createRecipeDto);
+            _recipeServiceMock.Setup(service => service.CreateRecipeAsync(createRecipeCommand))
+                .ReturnsAsync(1);
 
-            _recipeServiceMock.Verify(service => service.CreateRecipeAsync(createRecipeDto), Times.Once);
+            var result = await _recipeServiceMock.Object.CreateRecipeAsync(createRecipeCommand);
+
+            Assert.Equal(1, result);
+            _recipeServiceMock.Verify(service => service.CreateRecipeAsync(createRecipeCommand), Times.Once);
         }
 
         [Fact]
         public async Task UpdateRecipeStatusAsync_ShouldCallMethodOnce()
         {
-            var updateRecipeStatusDto = new UpdateRecipeStatusDto { Status = "Completed" };
+            
+            var updateRecipeCommand = new UpdateRecipeCommand
+            {
+                Id = 1,
+                Status = "Completed"
+            };
 
-            await _recipeServiceMock.Object.UpdateRecipeStatusAsync(1, updateRecipeStatusDto);
+            _recipeServiceMock.Setup(service => service.UpdateRecipeStatusAsync(updateRecipeCommand))
+                .Returns(Task.CompletedTask);
 
-            _recipeServiceMock.Verify(service => service.UpdateRecipeStatusAsync(1, updateRecipeStatusDto), Times.Once);
+            await _recipeServiceMock.Object.UpdateRecipeStatusAsync(updateRecipeCommand);
+
+            _recipeServiceMock.Verify(service => service.UpdateRecipeStatusAsync(updateRecipeCommand), Times.Once);
         }
 
         [Fact]
         public async Task GetRecipeByCodeAsync_ShouldReturnRecipeDto()
         {
+
             var recipeCode = "RCP001";
             var expectedRecipe = new RecipeDto
             {
@@ -62,7 +78,14 @@ namespace MSRecipes.Tests
 
             var result = await _recipeServiceMock.Object.GetRecipeByCodeAsync(recipeCode);
 
-            Assert.Equal(expectedRecipe, result);
+            Assert.NotNull(result);
+            Assert.Equal(expectedRecipe.Id, result.Id);
+            Assert.Equal(expectedRecipe.Code, result.Code);
+            Assert.Equal(expectedRecipe.PatientId, result.PatientId);
+            Assert.Equal(expectedRecipe.Description, result.Description);
+            Assert.Equal(expectedRecipe.CreatedDate, result.CreatedDate);
+            Assert.Equal(expectedRecipe.ExpiryDate, result.ExpiryDate);
+            Assert.Equal(expectedRecipe.Status, result.Status);
         }
 
         [Fact]
@@ -80,7 +103,9 @@ namespace MSRecipes.Tests
 
             var result = await _recipeServiceMock.Object.GetRecipesByPatientIdAsync(patientId);
 
-            Assert.Equal(expectedRecipes, result);
+            Assert.NotNull(result);
+            Assert.Equal(expectedRecipes.Count, result.Count());
+            _recipeServiceMock.Verify(service => service.GetRecipesByPatientIdAsync(patientId), Times.Once);
         }
     }
 }

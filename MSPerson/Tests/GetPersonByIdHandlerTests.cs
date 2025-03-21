@@ -2,37 +2,46 @@
 using System.Threading;
 using Moq;
 using MSPerson.Application.Handlers;
-using MSPerson.Application.interfaces;
 using MSPerson.Application.Queries;
-using MSPerson.Domain;
 using Xunit;
 using System;
+using MSPerson.Application.DTOs;
+using MSPerson.Application.Interfaces;
 
 namespace MSPerson.Tests
 {
-	public class GetPersonByIdHandlerTests
-	{
-        private readonly Mock<IPersonRepository> _repositoryMock;
+    public class GetPersonByIdHandlerTests
+    {
+        private readonly Mock<IPersonService> _serviceMock;
         private readonly GetPersonByIdHandler _handler;
 
         public GetPersonByIdHandlerTests()
         {
-            _repositoryMock = new Mock<IPersonRepository>();
-            _handler = new GetPersonByIdHandler(_repositoryMock.Object);
+            _serviceMock = new Mock<IPersonService>();
+            _handler = new GetPersonByIdHandler(_serviceMock.Object);
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnPerson_WhenPersonExists()
+        public async Task Handle_ShouldReturnPersonDto_WhenPersonExists()
         {
             var personId = 1;
-            var expectedPerson = Person.Create("Nestur Alvarez", "PS", "12345678", DateTime.Now, "1234567890", "email@example.com", PersonType.Patient);
+            var expectedPerson = new PersonDto
+            {
+                Id = personId,
+                Name = "Nestur Alvarez",
+                DocumentType = "PS",
+                DocumentNumber = "12345678",
+                DateOfBirth = DateTime.Now,
+                PhoneNumber = "1234567890",
+                Email = "email@example.com",
+                PersonType = "Patient"
+            };
 
-            _repositoryMock
-                .Setup(repo => repo.GetByIdAsync(personId))
+            _serviceMock
+                .Setup(service => service.GetPersonById(personId))
                 .ReturnsAsync(expectedPerson);
 
             var query = new GetPersonByIdQuery(personId);
-
             var result = await _handler.Handle(query, CancellationToken.None);
 
             Assert.NotNull(result);
@@ -45,9 +54,9 @@ namespace MSPerson.Tests
         {
             var personId = 1;
 
-            _repositoryMock
-                .Setup(repo => repo.GetByIdAsync(personId))
-                .ReturnsAsync((Person)null);
+            _serviceMock
+                .Setup(service => service.GetPersonById(personId))
+                .ReturnsAsync((PersonDto)null);
 
             var query = new GetPersonByIdQuery(personId);
             var result = await _handler.Handle(query, CancellationToken.None);

@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using MSQuotes.Application.Commands;
 using MSQuotes.Application.DTOs;
 
 namespace MSQuotes.Application.Interfaces
 {
     public interface IQuoteService
     {
-        Task<int> CreateQuoteAsync(CreateQuoteDto createQuoteDto);
-        Task UpdateQuoteStatusAsync(int id, UpdateQuoteStatusDto updateQuoteStatusDto);
+        Task<int> CreateQuoteAsync(CreateQuoteCommand createCommand);
+        Task UpdateQuoteStatusAsync(UpdateQuoteStatusCommand updateQuoteStatusDto);
         Task<IEnumerable<QuoteDto>> GetAllQuotesAsync();
     }
 }

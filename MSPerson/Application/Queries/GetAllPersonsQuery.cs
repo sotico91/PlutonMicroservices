@@ -2,25 +2,10 @@
 using System.Threading.Tasks;
 using System.Threading;
 using MediatR;
-using MSPerson.Application.interfaces;
-using MSPerson.Domain;
+using MSPerson.Application.DTOs;
 
 namespace MSPerson.Application.Queries
 {
-    public class GetAllPersonsQuery : IRequest<List<Person>> { }
+    public class GetAllPersonsQuery : IRequest<List<PersonDto>> { }
 
-    public class GetAllPersonsQueryHandler : IRequestHandler<GetAllPersonsQuery, List<Person>>
-    {
-        private readonly IPersonRepository _personRepository;
-
-        public GetAllPersonsQueryHandler(IPersonRepository personRepository)
-        {
-            _personRepository = personRepository;
-        }
-
-        public async Task<List<Person>> Handle(GetAllPersonsQuery request, CancellationToken cancellationToken)
-        {
-            return (List<Person>)await _personRepository.GetAllAsync();
-        }
-    }
 }

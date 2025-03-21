@@ -1,8 +1,7 @@
 ﻿using System;
 using MSQuotes.Application.DTOs;
 using Xunit;
-
-namespace MSQuotes.Application.Services
+namespace MSQuotes.Tests
 {
 	public class QuoteDtoTests
 	{

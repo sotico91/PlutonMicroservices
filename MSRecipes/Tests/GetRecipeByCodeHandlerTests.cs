@@ -5,20 +5,20 @@ using Moq;
 using MSRecipes.Application.Handlers;
 using MSRecipes.Application.Interfaces;
 using MSRecipes.Application.Queries;
-using MSRecipes.Domain;
 using Xunit;
+using MSRecipes.Application.DTOs;
 
 namespace MSRecipes.Tests
 {
     public class GetRecipeByCodeHandlerTests
     {
-        private readonly Mock<IRecipeRepository> _recipeRepositoryMock;
+        private readonly Mock<IRecipeService> _recipeServiceMock;
         private readonly GetRecipeByCodeHandler _handler;
 
         public GetRecipeByCodeHandlerTests()
         {
-            _recipeRepositoryMock = new Mock<IRecipeRepository>();
-            _handler = new GetRecipeByCodeHandler(_recipeRepositoryMock.Object);
+            _recipeServiceMock = new Mock<IRecipeService>();
+            _handler = new GetRecipeByCodeHandler(_recipeServiceMock.Object);
         }
 
         [Fact]
@@ -26,7 +26,7 @@ namespace MSRecipes.Tests
         {
             // Arrange
             var recipeCode = "RCP123";
-            var recipeEntity = new Recipe
+            var recipeDto = new RecipeDto
             {
                 Id = 1,
                 Code = recipeCode,
@@ -34,34 +34,37 @@ namespace MSRecipes.Tests
                 Description = "Sample Recipe",
                 CreatedDate = DateTime.UtcNow,
                 ExpiryDate = DateTime.UtcNow.AddDays(30),
-                Status = RecipeStatus.Active
+                Status = "Active"
             };
 
-            _recipeRepositoryMock
-                .Setup(repo => repo.GetByCodeAsync(recipeCode))
-                .ReturnsAsync(recipeEntity);
+            _recipeServiceMock
+                .Setup(service => service.GetRecipeByCodeAsync(recipeCode))
+                .ReturnsAsync(recipeDto);
 
             var query = new GetRecipeByCodeQuery(recipeCode);
 
+            // Act
             var result = await _handler.Handle(query, CancellationToken.None);
 
+            // Assert
             Assert.NotNull(result);
-            Assert.Equal(recipeEntity.Id, result.Id);
-            Assert.Equal(recipeEntity.Code, result.Code);
-            Assert.Equal(recipeEntity.PatientId, result.PatientId);
-            Assert.Equal(recipeEntity.Description, result.Description);
-            Assert.Equal(recipeEntity.CreatedDate, result.CreatedDate);
-            Assert.Equal(recipeEntity.ExpiryDate, result.ExpiryDate);
-            Assert.Equal(recipeEntity.Status.ToString(), result.Status);
+            Assert.Equal(recipeDto.Id, result.Id);
+            Assert.Equal(recipeDto.Code, result.Code);
+            Assert.Equal(recipeDto.PatientId, result.PatientId);
+            Assert.Equal(recipeDto.Description, result.Description);
+            Assert.Equal(recipeDto.CreatedDate, result.CreatedDate);
+            Assert.Equal(recipeDto.ExpiryDate, result.ExpiryDate);
+            Assert.Equal(recipeDto.Status, result.Status);
         }
 
         [Fact]
         public async Task Handle_WhenRecipeDoesNotExist_ThrowsArgumentException()
         {
+            // Arrange
             var recipeCode = "NON_EXISTENT";
-            _recipeRepositoryMock
-                .Setup(repo => repo.GetByCodeAsync(recipeCode))
-                .ReturnsAsync((Recipe)null);
+            _recipeServiceMock
+                .Setup(service => service.GetRecipeByCodeAsync(recipeCode))
+                .ReturnsAsync((RecipeDto)null);
 
             var query = new GetRecipeByCodeQuery(recipeCode);
 

@@ -7,7 +7,6 @@ using MSPerson.Application.interfaces;
 using MSPerson.Infrastructure.Data;
 using MSPerson.Infrastructure.repositories;
 using MSPerson.Application.Handlers;
-using MSPerson.Application.Services;
 using MSPerson.Application.Interfaces;
 namespace MSPerson
 {

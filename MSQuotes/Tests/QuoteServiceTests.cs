@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MediatR;
 using Moq;
 using MSQuotes.Application.Commands;
-using MSQuotes.Application.DTOs;
-using MSQuotes.Application.Queries;
+using MSQuotes.Application.Interfaces;
 using MSQuotes.Application.Services;
 using MSQuotes.Domain;
 using Xunit;
@@ -15,19 +13,21 @@ namespace MSQuotes.Tests
 {
 	public class QuoteServiceTests
 	{
-        private readonly Mock<IMediator> _mediatorMock;
+        private readonly Mock<IQuoteRepository> _quoteRepositoryMock;
+        private readonly Mock<IRabbitMQService> _rabbitMQServiceMock;
         private readonly QuoteService _quoteService;
 
         public QuoteServiceTests()
         {
-            _mediatorMock = new Mock<IMediator>();
-            _quoteService = new QuoteService(_mediatorMock.Object);
+            _quoteRepositoryMock = new Mock<IQuoteRepository>();
+            _rabbitMQServiceMock = new Mock<IRabbitMQService>();
+            _quoteService = new QuoteService(_quoteRepositoryMock.Object, _rabbitMQServiceMock.Object);
         }
 
         [Fact]
-        public async Task CreateQuoteAsync_ShouldSendCreateQuoteCommand()
+        public async Task CreateQuoteAsync_ShouldAddQuoteAndReturnId()
         {
-            var createQuoteDto = new CreateQuoteDto
+            var createQuoteCommand = new CreateQuoteCommand
             {
                 Date = DateTime.Now,
                 Location = "Location A",
@@ -35,41 +35,60 @@ namespace MSQuotes.Tests
                 DoctorId = 2
             };
 
-            _mediatorMock.Setup(m => m.Send(It.IsAny<CreateQuoteCommand>(), default))
-                .ReturnsAsync(1); 
+            var quote = new Quote
+            {
+                Id = 1,
+                Date = createQuoteCommand.Date,
+                Location = createQuoteCommand.Location,
+                PatientId = createQuoteCommand.PatientId,
+                DoctorId = createQuoteCommand.DoctorId,
+                Status = QuoteStatus.Pending
+            };
 
-            var result = await _quoteService.CreateQuoteAsync(createQuoteDto);
+            _quoteRepositoryMock.Setup(r => r.AddAsync(It.IsAny<Quote>()))
+                .Callback<Quote>(q => q.Id = 1)
+                .Returns(Task.CompletedTask);
+
+            var result = await _quoteService.CreateQuoteAsync(createQuoteCommand);
 
             Assert.Equal(1, result);
-            _mediatorMock.Verify(m => m.Send(It.IsAny<CreateQuoteCommand>(), default), Times.Once);
+            _quoteRepositoryMock.Verify(r => r.AddAsync(It.IsAny<Quote>()), Times.Once);
         }
 
         [Fact]
-        public async Task UpdateQuoteStatusAsync_ShouldSendUpdateQuoteStatusCommand()
+        public async Task UpdateQuoteStatusAsync_ShouldUpdateQuoteAndSendMessageIfCompleted()
         {
-            var updateDto = new UpdateQuoteStatusDto
+            var updateQuoteCommand = new UpdateQuoteStatusCommand
             {
+                Id = 1,
                 Status = "Completed",
                 Code = "12345",
                 Description = "Test Description",
                 ExpiryDate = DateTime.Now.AddDays(7)
             };
 
-            _mediatorMock.Setup(m => m.Send(It.IsAny<UpdateQuoteStatusCommand>(), default))
-               .ReturnsAsync(true);
+            var existingQuote = new Quote { Id = 1, Status = QuoteStatus.Pending, PatientId = 1 };
 
-            await _quoteService.UpdateQuoteStatusAsync(1, updateDto);
+            _quoteRepositoryMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(existingQuote);
+            _quoteRepositoryMock.Setup(r => r.UpdateAsync(It.IsAny<Quote>())).Returns(Task.CompletedTask);
+            _rabbitMQServiceMock.Setup(r => r.SendMessage(It.IsAny<string>())).Verifiable();
 
-            _mediatorMock.Verify(m => m.Send(It.IsAny<UpdateQuoteStatusCommand>(), default), Times.Once);
+            await _quoteService.UpdateQuoteStatusAsync(updateQuoteCommand);
+
+            _quoteRepositoryMock.Verify(r => r.UpdateAsync(It.IsAny<Quote>()), Times.Once);
+            _rabbitMQServiceMock.Verify(r => r.SendMessage(It.IsAny<string>()), Times.Once);
         }
 
         [Fact]
         public async Task UpdateQuoteStatusAsync_ShouldThrowExceptionForInvalidStatus()
         {
-            var updateDto = new UpdateQuoteStatusDto { Status = "InvalidStatus" };
+            var updateQuoteCommand = new UpdateQuoteStatusCommand { Id = 1, Status = "InvalidStatus" };
+            var existingQuote = new Quote { Id = 1, Status = QuoteStatus.Pending };
+
+            _quoteRepositoryMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(existingQuote);
 
             await Assert.ThrowsAsync<ArgumentException>(async () =>
-                await _quoteService.UpdateQuoteStatusAsync(1, updateDto));
+                await _quoteService.UpdateQuoteStatusAsync(updateQuoteCommand));
         }
 
         [Fact]
@@ -81,8 +100,7 @@ namespace MSQuotes.Tests
                 new Quote { Id = 2, Status = QuoteStatus.Completed, PatientId = 3, DoctorId = 4, Date = DateTime.Now, Location = "B" }
             };
 
-            _mediatorMock.Setup(m => m.Send(It.IsAny<GetAllQuotesQuery>(), default))
-                .ReturnsAsync(quotes);
+            _quoteRepositoryMock.Setup(r => r.GetAllAsync()).ReturnsAsync(quotes);
 
             var result = await _quoteService.GetAllQuotesAsync();
 
@@ -91,7 +109,7 @@ namespace MSQuotes.Tests
             Assert.Equal("Pending", result.First().Status);
             Assert.Equal("Completed", result.Last().Status);
 
-            _mediatorMock.Verify(m => m.Send(It.IsAny<GetAllQuotesQuery>(), default), Times.Once);
+            _quoteRepositoryMock.Verify(r => r.GetAllAsync(), Times.Once);
         }
     }
 }

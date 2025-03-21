@@ -10,31 +10,22 @@ namespace MSRecipes.Application.Handlers
 {
     public class GetRecipeByCodeHandler : IRequestHandler<GetRecipeByCodeQuery, RecipeDto>
     {
-        private readonly IRecipeRepository _recipeRepository;
+        private readonly IRecipeService _recipeService;
 
-        public GetRecipeByCodeHandler(IRecipeRepository recipeRepository)
+        public GetRecipeByCodeHandler(IRecipeService recipeService)
         {
-            _recipeRepository = recipeRepository;
+            _recipeService = recipeService;
         }
 
         public async Task<RecipeDto> Handle(GetRecipeByCodeQuery request, CancellationToken cancellationToken)
         {
-            var recipe = await _recipeRepository.GetByCodeAsync(request.Code);
-            if (recipe == null)
+            var recipeDto = await _recipeService.GetRecipeByCodeAsync(request.Code);
+            if (recipeDto == null)
             {
                 throw new ArgumentException("Recipe not found");
             }
 
-            return new RecipeDto
-            {
-                Id = recipe.Id,
-                Code = recipe.Code,
-                PatientId = recipe.PatientId,
-                Description = recipe.Description,
-                CreatedDate = recipe.CreatedDate,
-                ExpiryDate = recipe.ExpiryDate,
-                Status = recipe.Status.ToString()
-            };
+            return recipeDto;
         }
     }
 }

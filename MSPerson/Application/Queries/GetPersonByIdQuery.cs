@@ -1,9 +1,9 @@
 ﻿using MediatR;
-using MSPerson.Domain;
+using MSPerson.Application.DTOs;
 
 namespace MSPerson.Application.Queries
 {
-	public class GetPersonByIdQuery : IRequest<Person>
+	public class GetPersonByIdQuery : IRequest<PersonDto>
 	{
         public int Id { get; set; }
 

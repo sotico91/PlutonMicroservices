@@ -2,39 +2,34 @@
 using System.Threading.Tasks;
 using System.Threading;
 using MediatR;
-using MSPerson.Application.interfaces;
-using System.Collections.Generic;
+using MSPerson.Application.DTOs;
+using MSPerson.Application.Interfaces;
 
 namespace MSPerson.Application.Commands
 {
     public class UpdatePersonCommandHandler : IRequestHandler<UpdatePersonCommand, bool>
     {
-        private readonly IPersonRepository _personRepository;
+        private readonly IPersonService _personService;
 
-        public UpdatePersonCommandHandler(IPersonRepository personRepository)
+        public UpdatePersonCommandHandler(IPersonService personService)
         {
-            _personRepository = personRepository;
+            _personService = personService ?? throw new ArgumentNullException(nameof(personService));
         }
 
         public async Task<bool> Handle(UpdatePersonCommand request, CancellationToken cancellationToken)
         {
-            var person = await _personRepository.GetByIdAsync(request.Id);
-            if (person == null)
+            var updatePersonDto = new UpdatePersonDto
             {
-                throw new KeyNotFoundException($"Person with ID {request.Id} not found.");
-            }
+                Name = request.Name,
+                DocumentType = request.DocumentType,
+                DocumentNumber = request.DocumentNumber,
+                DateOfBirth = (DateTime)request.DateOfBirth,
+                PhoneNumber = request.PhoneNumber,
+                Email = request.Email,
+                PersonType = request.PersonType.ToString()
+            };
 
-            person.Name = request.Name ?? person.Name;
-            person.DocumentType = request.DocumentType ?? person.DocumentType;
-            person.DocumentNumber = request.DocumentNumber ?? person.DocumentNumber;
-            person.DateOfBirth = (DateTime)(request.DateOfBirth != default ? request.DateOfBirth : person.DateOfBirth);
-            person.PhoneNumber = request.PhoneNumber ?? person.PhoneNumber;
-            person.Email = request.Email ?? person.Email;
-
-            var personType = request.PersonType != null && request.PersonType != person.PersonType ? request.PersonType : person.PersonType;
-            person.Update(person.Name, person.DocumentType, person.DocumentNumber, person.DateOfBirth, person.PhoneNumber, person.Email, (Domain.PersonType)personType);
-
-            await _personRepository.UpdateAsync(person);
+            await _personService.UpdatePersonAsync(request.Id, updatePersonDto);
             return true;
         }
     }

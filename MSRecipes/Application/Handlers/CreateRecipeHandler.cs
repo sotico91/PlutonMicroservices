@@ -3,34 +3,21 @@ using System.Threading;
 using MediatR;
 using MSRecipes.Application.Commands;
 using MSRecipes.Application.Interfaces;
-using MSRecipes.Domain;
-using System;
 
 namespace MSRecipes.Application.Handlers
 {
     public class CreateRecipeHandler : IRequestHandler<CreateRecipeCommand, int>
     {
-        private readonly IRecipeRepository _repository;
+        private readonly IRecipeService _recipeService;
 
-        public CreateRecipeHandler(IRecipeRepository repository)
+        public CreateRecipeHandler(IRecipeService recipeService)
         {
-            _repository = repository;
+            _recipeService = recipeService;
         }
 
         public async Task<int> Handle(CreateRecipeCommand request, CancellationToken cancellationToken)
         {
-            var recipe = new Recipe
-            {
-                Code = request.Code,
-                PatientId = request.PatientId,
-                Description = request.Description,
-                CreatedDate = DateTime.UtcNow,
-                ExpiryDate = request.ExpiryDate,
-                Status = RecipeStatus.Active
-            };
-
-            await _repository.AddAsync(recipe);
-            return recipe.Id;
+            return await _recipeService.CreateRecipeAsync(request);
         }
     }
 }

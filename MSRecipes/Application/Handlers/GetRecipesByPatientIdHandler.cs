@@ -12,27 +12,16 @@ namespace MSRecipes.Application.Handlers
 {
     public class GetRecipesByPatientIdHandler : IRequestHandler<GetRecipesByPatientIdQuery, IEnumerable<RecipeDto>>
     {
-        private readonly IRecipeRepository _recipeRepository;
+        private readonly IRecipeService _recipeService;
 
-        public GetRecipesByPatientIdHandler(IRecipeRepository recipeRepository)
+        public GetRecipesByPatientIdHandler(IRecipeService recipeService)
         {
-            _recipeRepository = recipeRepository;
+            _recipeService = recipeService;
         }
 
         public async Task<IEnumerable<RecipeDto>> Handle(GetRecipesByPatientIdQuery request, CancellationToken cancellationToken)
         {
-            var recipes = await _recipeRepository.GetByPatientIdAsync(request.PatientId);
-
-            return recipes.Select(recipe => new RecipeDto
-            {
-                Id = recipe.Id,
-                Code = recipe.Code,
-                PatientId = recipe.PatientId,
-                Description = recipe.Description,
-                CreatedDate = recipe.CreatedDate,
-                ExpiryDate = recipe.ExpiryDate,
-                Status = recipe.Status.ToString()
-            }).ToList();
+            return await _recipeService.GetRecipesByPatientIdAsync(request.PatientId);
         }
     }
 }

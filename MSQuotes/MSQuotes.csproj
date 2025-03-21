@@ -28,6 +28,8 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <RunSettingsFilePath>
+    </RunSettingsFilePath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -255,6 +257,7 @@
     <Compile Include="Application\DTOs\UpdateQuoteStatusDto.cs" />
     <Compile Include="Application\Factories\QuoteFactory.cs" />
     <Compile Include="Application\Handlers\CreateQuoteCommandHandler.cs" />
+    <Compile Include="Application\Handlers\GetAllQuotesQueryHandler.cs" />
     <Compile Include="Application\Handlers\GetQuoteByIdHandler.cs" />
     <Compile Include="Application\Handlers\UpdateQuoteStatusCommandHandler.cs" />
     <Compile Include="Application\Interfaces\IQuoteRepository.cs" />

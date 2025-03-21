@@ -1,24 +1,24 @@
-﻿
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Threading;
 using MediatR;
-using MSPerson.Application.interfaces;
+using MSPerson.Application.Interfaces;
 using MSPerson.Application.Queries;
-using MSPerson.Domain;
+using MSPerson.Application.DTOs;
 
 namespace MSPerson.Application.Handlers
 {
-	public class GetPersonByIdHandler: IRequestHandler<GetPersonByIdQuery, Person>
-	{
+    public class GetPersonByIdHandler : IRequestHandler<GetPersonByIdQuery, PersonDto>
+    {
+        private readonly IPersonService _personService;
 
-        private readonly IPersonRepository _repository;
-        public GetPersonByIdHandler(IPersonRepository repository)
+        public GetPersonByIdHandler(IPersonService personService)
         {
-            _repository = repository;
+            _personService = personService;
         }
-        public async Task<Person> Handle(GetPersonByIdQuery request, CancellationToken cancellationToken)
+
+        public async Task<PersonDto> Handle(GetPersonByIdQuery request, CancellationToken cancellationToken)
         {
-            return await _repository.GetByIdAsync(request.Id);
+            return await _personService.GetPersonById(request.Id);
         }
     }
 }

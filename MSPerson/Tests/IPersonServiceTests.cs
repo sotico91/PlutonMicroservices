@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Moq;
+using MSPerson.Application.Commands;
 using MSPerson.Application.DTOs;
 using MSPerson.Application.Interfaces;
 using MSPerson.Domain;
@@ -38,7 +39,7 @@ namespace MSPerson.Tests
         [Fact]
         public async Task CreatePerson_ShouldCallServiceOnce()
         {
-            var createPersonDto = new CreatePersonDto { Name = "Miguel" };
+            var createPersonDto = new CreatePersonCommand { Name = "Miguel" };
 
             await _personServiceMock.Object.CreatePerson(createPersonDto);
 

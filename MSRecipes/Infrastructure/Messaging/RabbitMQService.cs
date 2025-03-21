@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Autofac;
+using MSRecipes.Application.Commands;
 using MSRecipes.Application.DTOs;
 using MSRecipes.Application.Interfaces;
 using RabbitMQ.Client;
@@ -49,12 +50,14 @@ namespace MSRecipes.Infrastructure.Messaging
                     using (var scope = _componentContext.Resolve<ILifetimeScope>().BeginLifetimeScope())
                     {
                         var recipeService = scope.Resolve<IRecipeService>();
-                        await recipeService.CreateRecipeAsync(createRecipeDto);
+
+                        var createRecipeCommand = ConvertToDto(createRecipeDto);
+                        await recipeService.CreateRecipeAsync(createRecipeCommand);
                     }
 
                     System.Diagnostics.Debug.WriteLine($"Recibido y procesado en MSRecipes: {message}");
 
-                  
+
                     channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
                 }
                 catch (Exception ex)
@@ -65,16 +68,26 @@ namespace MSRecipes.Infrastructure.Messaging
                 }
             };
 
-    
+
             channel.BasicConsume(queue: _queueName, autoAck: false, consumer: consumer);
         }
 
         async Task IRabbitMQService.HandleMessageAsync(string message)
         {
             Console.WriteLine($"Procesando mensaje: {message}");
-        
+
             await Task.Delay(500);
         }
-    } 
-  
+
+    private static CreateRecipeCommand ConvertToDto(CreateRecipeDto createRecipeDto)
+        {
+            return new CreateRecipeCommand
+            {
+                Code = createRecipeDto.Code,
+                PatientId = createRecipeDto.PatientId,
+                Description = createRecipeDto.Description,
+                ExpiryDate = createRecipeDto.ExpiryDate
+            };
+        }
+    }
 }

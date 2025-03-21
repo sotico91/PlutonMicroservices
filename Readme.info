@@ -57,6 +57,19 @@ Nota: En caso de que no se logra migrar la info hacia la base de datos, se adjun
 
 El script queda en la ruta /PlutonMicroservices/Scripts/ScriptIni.sql
 
+Configurar RabbitMQ con Docker
+Si deseas utilizar RabbitMQ para manejar colas de mensajes, puedes ejecutarlo en un contenedor Docker con el siguiente comando:
+     
+	 ```sh
+     docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:management
+     ```
+	 
+Esto iniciará un contenedor con la interfaz de administración habilitada en `http://localhost:15672/`.
+Usuario: `admin`, Contraseña: `admin`, si no existe se debe definir
+
+7. **Compilar y ejecutar el proyecto**
+   - En Visual Studio, presiona `Ctrl + F5` o selecciona `Iniciar` para ejecutar la API localmente.
+
 Compilar y ejecutar el proyecto
 
 En Visual Studio, presiona Ctrl + F5 o selecciona Iniciar para ejecutar la API localmente.
